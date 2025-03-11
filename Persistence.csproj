@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<PackageId>FlyingFury.Yeti.Persistence</PackageId>
+	<Version>0.0.1</Version>
+	<Authors>Flying Fury</Authors>
+	<Company>Flying Fury</Company>
+	<Description>Database access layer for the Yeti project</Description>
+	<PackageTags>Persistance</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+	<PackageReference Include="Dapper" Version="2.1.66" />	
+	<PackageReference Include="FlyingFury.Libraries.ErrorHandling" Version="0.0.1" />
+	<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
+  </ItemGroup>
+</Project>

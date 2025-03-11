@@ -1,0 +1,9 @@
+CREATE TABLE dbo.User_Data (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(20) NOT NULL,
+    Email NVARCHAR(255) NOT NULL,
+    Password NVARCHAR(255) NOT NULL,
+    Last_Login DATETIME NOT NULL,
+    Created_On DATETIME NOT NULL,
+    Modified_On DATETIME NOT NULL
+);
