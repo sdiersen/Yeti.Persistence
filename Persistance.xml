@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Persistence</name>
+    </assembly>
+    <members>
+        <member name="T:Persistence.DbBaseLayer`2">
+            <summary>
+            
+            </summary>
+            <typeparam name="T1">The Subclass that uses this Superclass </typeparam>
+            <typeparam name="T2">The Model class that is being accessed in the database.</typeparam>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Persistence.DbBaseLayer`2.GetFirstXRows(System.Int32)" -->
+        <member name="M:Persistence.Helpers.DatabaseHelpers.IsConnectionStringValid">
+            <summary>
+            Checks if the connection string is valid by opening a connection and executing a simple query to the sql server.
+            </summary>
+            <returns>True if able to connect to the sql server with the connection string. False otherwise.</returns>
+        </member>
+        <member name="M:Persistence.Helpers.DatabaseHelpers.IsDatabaseValid">
+            <summary>
+            Checks if the database is valid by opening a connection and executing a simple query.
+            </summary>
+            <returns>True if able to connect to the database and execute the basic query. False otherwise.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.CreateDatabase" -->
+        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.MigrateUp" -->
+        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.MigrateDown(System.Int64)" -->
+        <member name="T:Persistence.ModelValidations.IModelValidation`1">
+            <summary>
+            Used to validate a model.
+            ValidateModel should return a ReturnValue with Success = true if the model is valid.
+            ValidateModel should return a ReturnValue with Success = false if the model is invalid.
+            ValidateModel should return a ReturnValue with a list of errors if the model is invalid.
+            It is up to the model to determine what is considered valid or invalid. For instance, UserData
+            will require a username, email, and password. Each of these properties will be tested to see if
+            meet the requirements of the model. A class like Category may require a name, that must fit 
+            specific requirements, but a descritption could be optional. If descritption is present, then it
+            must meet specific requirements. The lack of a description should not cause the model to be invalid.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+    </members>
+</doc>

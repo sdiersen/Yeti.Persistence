@@ -5,11 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageId>FlyingFury.Yeti.Persistence</PackageId>
-	<Version>0.0.1</Version>
+	<Version>$(GitVersion_FullSemVer)</Version>
 	<Authors>Flying Fury</Authors>
 	<Company>Flying Fury</Company>
 	<Description>Database access layer for the Yeti project</Description>
 	<PackageTags>Persistance</PackageTags>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<DocumentationFile>Persistance.xml</DocumentationFile>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<DebugType>Portable</DebugType>
+	<IncludeSource>True</IncludeSource>
   </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="Dapper" Version="2.1.66" />
