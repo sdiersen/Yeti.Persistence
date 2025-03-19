@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.DataProtection;
+using Persistence.Helpers;
+
 namespace Persistence.Models.Identity
 {
     public class UserData : AbstractBaseModel
@@ -10,6 +13,29 @@ namespace Persistence.Models.Identity
         static public UserData DefaultUser()
         {
             return new UserData { Id = -1 };
+        }
+    }
+
+    public static class UserDataExtensions
+    {
+        public static UserData ProtectData(this UserData userData)
+        {
+            var dataProtector = DataProtectionConfig.CreateProtector("UserData");
+            userData.Username = dataProtector.Protect(userData.Username);
+            userData.Email = dataProtector.Protect(userData.Email);
+            userData.Password = dataProtector.Protect(userData.Password);
+
+            return userData;
+        }
+
+        public static UserData UnprotectData(this UserData userData)
+        {
+            var dataProtector = DataProtectionConfig.CreateProtector("UserData");
+            userData.Username = dataProtector.Unprotect(userData.Username);
+            userData.Email = dataProtector.Unprotect(userData.Email);
+            userData.Password = dataProtector.Unprotect(userData.Password);
+
+            return userData;
         }
     }
 }

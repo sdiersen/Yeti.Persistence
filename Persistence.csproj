@@ -12,8 +12,13 @@
 	<PackageTags>Persistance</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="Dapper" Version="2.1.66" />	
-	<PackageReference Include="FlyingFury.Libraries.ErrorHandling" Version="0.0.1" />
+	<PackageReference Include="Dapper" Version="2.1.66" />
+	<PackageReference Include="FluentMigrator" Version="6.2.0" />
+	<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="6.2.0" />
+	<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="6.2.0" />	
+	<PackageReference Include="FlyingFury.Libraries.ErrorHandling" Version="0.0.1" />	
+	<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.14" />	
+	<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.14" />
 	<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
 	<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />

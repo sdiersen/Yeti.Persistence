@@ -4,6 +4,8 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence.csproj", "{525DD0BE-7B18-4119-B97C-206BE06AB539}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver", "..\Driver\Driver.csproj", "{A70454D9-6895-4175-9BB4-369EAC20D666}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,10 @@ Global
 		{525DD0BE-7B18-4119-B97C-206BE06AB539}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{525DD0BE-7B18-4119-B97C-206BE06AB539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{525DD0BE-7B18-4119-B97C-206BE06AB539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A70454D9-6895-4175-9BB4-369EAC20D666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70454D9-6895-4175-9BB4-369EAC20D666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70454D9-6895-4175-9BB4-369EAC20D666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70454D9-6895-4175-9BB4-369EAC20D666}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ namespace Persistence.Migrations.Constants
         public const string USERNAME = "UserName";
         public const string EMAIL = "Email";
         public const string PASSWORD = "Password";
+        public const string LAST_LOGIN = "LastLogin";
 
 
     }
