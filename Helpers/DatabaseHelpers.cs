@@ -16,11 +16,19 @@ namespace Persistence.Helpers
     //  - Valid Database
     // There should be a public class that uses the fluentRunner to migrate the database up and down.
     // this might change later, for testing we'll keep it as is.
+    /// <summary>
+    /// This class is used to help with database operations such as creating a database, checking if the database is valid, and migrating the database up and down.
+    /// </summary>
     public class DatabaseHelpers
     {
         private readonly string _connectionString;
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Constructor for the DatabaseHelpers class.
+        /// </summary>
+        /// <param name="configuration">IConfiguration object which needs to have a connection string for the database</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DatabaseHelpers(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException(nameof(configuration));
