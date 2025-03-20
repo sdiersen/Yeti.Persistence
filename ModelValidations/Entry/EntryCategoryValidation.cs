@@ -4,9 +4,19 @@ using ErrorHandling;
 
 namespace Persistence.ModelValidations.Entry
 {
+    /// <summary>
+    /// Validates the EntryCategory model.
+    /// </summary>
     public class EntryCategoryValidation : IModelValidation<EntryCategory>
     {
-
+        /// <summary>
+        /// Validates the EntryCategory model.
+        /// </summary>
+        /// <param name="model">the EntryCategory object to be validated</param>
+        /// <returns>
+        /// A ReturnValue object with Success = true if the model is valid, false otherwise.
+        /// If Success = false, the ReturnValue object will contain a list of error messages.
+        /// </returns>
         public ReturnValue ValidateModel(EntryCategory model)
         {
             ReturnValue returnValue = new ReturnValue();
@@ -24,16 +34,36 @@ namespace Persistence.ModelValidations.Entry
             return returnValue;
         }
 
-        public Task<ReturnValue> ValidateModelAsync(EntryCategory model)
+        /// <summary>
+        /// Validates the EntryCategory model asynchronously.
+        /// </summary>
+        /// <param name="model">the EntryCategory object to be validated</param>
+        /// <returns>
+        /// A ReturnValue object with Success = true if the model is valid, false otherwise.
+        /// If Success = false, the ReturnValue object will contain a list of error messages.
+        /// </returns>
+        public async Task<ReturnValue> ValidateModelAsync(EntryCategory model)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            ReturnValue returnValue = new ReturnValue();
+            List<string> messages = ValidateName(model.Name);
+            if (messages.Count > 0)
+            {
+                returnValue.Messages.AddRange(messages);
+            }
+            messages = ValidateDescription(model.Description);
+            if (messages.Count > 0)
+            {
+                returnValue.Messages.AddRange(messages);
+            }
+            returnValue.Success = returnValue.Messages.Count == 0;
+            return returnValue;
         }
 
-        //These private methods should probably return a list<string> or string[] of errors
-        //since ReturnValue.Errors and ReturnValue.Messages are Lists of strings
-        private List<string> ValidateName(string name)
+        private static List<string> ValidateName(string name)
         {
-            List<string> messages = new List<string>();
+            List<string> messages = [];
             if (string.IsNullOrWhiteSpace(name))
             {
                 messages.Add("Name is null or empty.");
@@ -46,9 +76,9 @@ namespace Persistence.ModelValidations.Entry
             return messages;
         }
 
-        private List<string> ValidateDescription(string description)
+        private static List<string> ValidateDescription(string description)
         {
-            List<string> messages = new List<string>();
+            List<string> messages = [];
             if (string.IsNullOrWhiteSpace(description))
             {
                 messages.Add("Entry categories need a description.");

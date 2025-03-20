@@ -4,8 +4,19 @@ using ErrorHandling;
 
 namespace Persistence.ModelValidations.Entry
 {
+    /// <summary>
+    /// Validates the Item model.
+    /// </summary>
     public class ItemValidation : IModelValidation<Item>
     {
+        /// <summary>
+        /// Validates the Item model.
+        /// </summary>
+        /// <param name="model">the Item object to be validated</param>
+        /// <returns>
+        /// A ReturnValue object with Success = true if the model is valid, false otherwise.
+        /// If Success = false, the ReturnValue object will contain a list of error messages.
+        /// </returns>
         public ReturnValue ValidateModel(Item model)
         {
             ReturnValue returnValue = new ReturnValue();
@@ -28,14 +39,41 @@ namespace Persistence.ModelValidations.Entry
             return returnValue;
         }
 
-        public Task<ReturnValue> ValidateModelAsync(Item model)
+        /// <summary>
+        /// Validates the Item model asynchronously.
+        /// </summary>
+        /// <param name="model">the Item object to be validated</param>
+        /// <returns>
+        /// A ReturnValue object with Success = true if the model is valid, false otherwise.
+        /// If Success = false, the ReturnValue object will contain a list of error messages.
+        /// </returns>
+        public async Task<ReturnValue> ValidateModelAsync(Item model)
         {
-            return Task.Run(() => ValidateModel(model));
+            await Task.Yield();
+
+            ReturnValue returnValue = new ReturnValue();
+            List<string> messages = ValidateName(model.Name);
+            if (messages.Count > 0)
+            {
+                returnValue.Messages.AddRange(messages);
+            }
+            messages = ValidateDescription(model.Description);
+            if (messages.Count > 0)
+            {
+                returnValue.Messages.AddRange(messages);
+            }
+            messages = ValidateAmount(model.Amount);
+            if (messages.Count > 0)
+            {
+                returnValue.Messages.AddRange(messages);
+            }
+            returnValue.Success = returnValue.Messages.Count == 0;
+            return returnValue;
         }
 
-        private List<string> ValidateName(string name)
+        private static List<string> ValidateName(string name)
         {
-            List<string> messages = new List<string>();
+            List<string> messages = [];
             if (string.IsNullOrWhiteSpace(name))
             {
                 messages.Add("Name is null or empty.");
@@ -48,9 +86,9 @@ namespace Persistence.ModelValidations.Entry
             return messages;
         }
 
-        private List<string> ValidateDescription(string description)
+        private static List<string> ValidateDescription(string description)
         {
-            List<string> messages = new List<string>();
+            List<string> messages = [];
             if (string.IsNullOrWhiteSpace(description))
             {
                 messages.Add("Description is null or empty.");
@@ -63,9 +101,9 @@ namespace Persistence.ModelValidations.Entry
             return messages;
         }
 
-        private List<string> ValidateAmount(decimal amount)
+        private static List<string> ValidateAmount(decimal amount)
         {
-            List<string> messages = new List<string>();
+            List<string> messages = [];
 
             // TODO: add validation for amount
             return messages;

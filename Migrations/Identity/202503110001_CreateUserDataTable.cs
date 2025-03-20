@@ -1,5 +1,7 @@
-﻿
+﻿#pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+
 using FluentMigrator;
+
 using Persistence.Migrations.Constants;
 
 namespace Persistence.Migrations
@@ -25,3 +27,6 @@ namespace Persistence.Migrations
         }
     }
 }
+
+
+#pragma warning restore 1591 // Missing XML comment for publicly visible type or member

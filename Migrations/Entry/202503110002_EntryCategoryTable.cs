@@ -1,4 +1,7 @@
-﻿using FluentMigrator;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+using FluentMigrator;
+
 using Persistence.Migrations.Constants;
 
 namespace Persistence.Migrations
@@ -9,11 +12,11 @@ namespace Persistence.Migrations
         public override void Up()
         {
             Create.Table($"{DbTableNames.ENTRY_CATEGORY_TABLE}")
-                .WithColumn($"{DbEntryCategoryTable.ID}").AsInt32().PrimaryKey().Identity()
-                .WithColumn($"{DbEntryCategoryTable.NAME}").AsString().NotNullable()
-                .WithColumn($"{DbEntryCategoryTable.DESCRIPTION}").AsString().Nullable()
-                .WithColumn($"{DbEntryCategoryTable.CREATED_ON}").AsDateTime().NotNullable()
-                .WithColumn($"{DbEntryCategoryTable.MODIFIED_ON}").AsDateTime().NotNullable();
+                .WithColumn($"{DbCategoryTable.ID}").AsInt32().PrimaryKey().Identity()
+                .WithColumn($"{DbCategoryTable.NAME}").AsString().NotNullable()
+                .WithColumn($"{DbCategoryTable.DESCRIPTION}").AsString().Nullable()
+                .WithColumn($"{DbCategoryTable.CREATED_ON}").AsDateTime().NotNullable()
+                .WithColumn($"{DbCategoryTable.MODIFIED_ON}").AsDateTime().NotNullable();
         }
         public override void Down()
         {
@@ -21,3 +24,5 @@ namespace Persistence.Migrations
         }
     }
 }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

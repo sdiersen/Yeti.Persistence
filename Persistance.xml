@@ -11,7 +11,237 @@
             <typeparam name="T1">The Subclass that uses this Superclass </typeparam>
             <typeparam name="T2">The Model class that is being accessed in the database.</typeparam>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Persistence.DbBaseLayer`2.GetFirstXRows(System.Int32)" -->
+        <member name="F:Persistence.DbBaseLayer`2._connectionString">
+            <summary>
+            The connection string to the database
+            </summary>
+        </member>
+        <member name="F:Persistence.DbBaseLayer`2._configuration">
+            <summary>
+            The configuration object that is used to get the connection string from the appsettings.json file
+            </summary>
+        </member>
+        <member name="F:Persistence.DbBaseLayer`2._logger">
+            <summary>
+            The logger object that is used to log messages to the console or a file.
+            </summary>
+        </member>
+        <member name="F:Persistence.DbBaseLayer`2._modelValidation">
+            <summary>
+            The model validation object that is used to validate the model before inserting or updating the database.
+            </summary>
+        </member>
+        <member name="P:Persistence.DbBaseLayer`2.Id">
+            <summary>
+            The Id of the row in the database
+            </summary>
+        </member>
+        <member name="P:Persistence.DbBaseLayer`2.TableName">
+            <summary>
+            The name of the table in the database
+            </summary>
+        </member>
+        <member name="P:Persistence.DbBaseLayer`2.CreatedOn">
+            <summary>
+            The date and time the row was created
+            </summary>
+        </member>
+        <member name="P:Persistence.DbBaseLayer`2.ModifiedOn">
+            <summary>
+            The date and time the row was last modified
+            </summary>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.#ctor(Microsoft.Extensions.Logging.ILogger{`0},Microsoft.Extensions.Configuration.IConfiguration,Persistence.ModelValidations.IModelValidation{`1})">
+            <summary>
+            Constructor for the DbBaseLayer class.
+            </summary>
+            <param name="logger">ILogger<typeparamref name="T1"/> where T1 is the subclass that uses this class</param>
+            <param name="configuration">IConfiguation object that needs to contain the connection string for the database</param>
+            <param name="modelValidation">IModelValidation<typeparamref name="T2"/> where T2 is the concrete data model class</param>
+            <exception cref="T:System.ArgumentNullException">Throws ArgumentNullException if the connection string is not an environment variable or in the appsettings.json file</exception>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.GetRow(System.Int32)">
+            <summary>
+            Get a row from the table by the Id
+            </summary>
+            <param name="id">id of the row to return</param>
+            <returns>
+            A ReturnValue Object.
+            If the row is found, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was found, and ReturnValue.Data contains the row.
+            If the row is not found, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not found, and ReturnValue.Data is null. 
+            If there is an exception, ReturnValue.Success is false, ReturnValue.Errors contains the exception message, and ReturnValue.Data is null.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.GetRowAsync(System.Int32)">
+            <summary>
+            Get a row from the table by the Id asynchronously
+            </summary>
+            <param name="id">id of the row to return</param>
+            <returns>
+            A ReturnValue Object.
+            If the row is found, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was found, and ReturnValue.Data contains the row.
+            If the row is not found, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not found, and ReturnValue.Data is null. 
+            If there is an exception, ReturnValue.Success is false, ReturnValue.Errors contains the exception message, and ReturnValue.Data is null.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.GetFirstXRows(System.Int32)">
+            <summary>
+            Get the first numberOfRows from teh table
+            if numberOfRows is less than or equal to 0, return all rows
+            </summary>
+            <param name="numberOfRows">the number of rows to return from the top of the table</param>
+            <returns>
+            A ReturnValue Object.
+            If any rows are found, ReturnValue.Success is true, ReturnValue.Messages contains a message with the number of rows found, and ReturnValue.Data contains List<typeparamref name="T2"/> objects.
+            If now rows are not found, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not found, and ReturnValue.Data is null. 
+            If there is an exception, ReturnValue.Success is false, ReturnValue.Errors contains the exception message, and ReturnValue.Data is null.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.GetFirstXRowsAsync(System.Int32)">
+            <summary>
+            Get the first numberOfRows from teh table asynchronously 
+            if numberOfRows is less than or equal to 0, return all rows
+            </summary>
+            <param name="numberOfRows">the number of rows to return from the top of the table</param>
+            <returns>
+            A ReturnValue Object.
+            If any rows are found, ReturnValue.Success is true, ReturnValue.Messages contains a message with the number of rows found, and ReturnValue.Data contains List<typeparamref name="T2"/> objects.
+            If now rows are not found, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not found, and ReturnValue.Data is null. 
+            If there is an exception, ReturnValue.Success is false, ReturnValue.Errors contains the exception message, and ReturnValue.Data is null.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.DeleteRow(System.Int32)">
+            <summary>
+            Delete a row from the table by the Id
+            </summary>
+            <param name="id">the id of the row to be deleted.</param>
+            <returns>
+            A ReturnValue object.
+            If the row is deleted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was deleted.
+            If the row is not deleted, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not deleted, and ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.DeleteRowAsync(System.Int32)">
+            <summary>
+            Delete a row from the table by the Id asynchronously
+            </summary>
+            <param name="id">the id of the row to be deleted.</param>
+            <returns>
+            A ReturnValue object.
+            If the row is deleted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was deleted.
+            If the row is not deleted, ReturnValue.Success is false, ReturnValue.Messages contains a message that the row was not deleted, and ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.InsertRowBase(System.String,Dapper.DynamicParameters)">
+            <summary>
+            Insert a row into the table
+            </summary>
+            <param name="sql">the sql INSERT query to be executed for the specific table</param>
+            <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+            <code>
+            <para>Example of parameter construction:</para>
+            var sql = $@"INSERT INTO {TableName} (Name, Description, CreatedOn, ModifiedOn) VALUES (@Name, @Description, @CreatedOn, @ModifiedOn);";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Name", model.Name);
+            parameters.Add("@Description", model.Description);
+            parameters.Add("@CreatedOn", CreatedOn);
+            parameters.Add("@ModifiedOn", ModifiedOn);
+            </code>
+            <returns>
+            A ReturnValue object.
+            If the row is inserted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was inserted.
+            If the row is not inserted, ReturnValue.Success is false, ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.InsertRowBaseAsync(System.String,Dapper.DynamicParameters)">
+            <summary>
+            Insert a row into the table asynchronously
+            </summary>
+            <param name="sql">the sql INSERT query to be executed for the specific table</param>
+            <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+            <code>
+            <para>Example of parameter construction:</para>
+            var sql = $@"INSERT INTO {TableName} ({Name}, {Description}, {CreatedOn}, {ModifiedOn}) VALUES (@Name, @Description, @CreatedOn, @ModifiedOn);";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Name", model.Name);
+            parameters.Add("@Description", model.Description);
+            parameters.Add("@CreatedOn", CreatedOn);
+            parameters.Add("@ModifiedOn", ModifiedOn);
+            </code>
+            <returns>
+            A ReturnValue object.
+            If the row is inserted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was inserted.
+            If the row is not inserted, ReturnValue.Success is false, ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.UpdateRowBase(System.String,Dapper.DynamicParameters)">
+            <summary>
+            Update a row in the table
+            </summary>
+            <param name="sql">the sql UPDATE query to be executed for the specific table</param>
+            <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+            <code>
+            <para>Example of parameter construction:</para>
+            var sql = $@"UPDATE {TableName} SET ({Name}=@Name, {Description}=@Description, {ModifiedOn}=@ModifiedOn) WHERE {Id}=@Id;";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Name", model.Name);
+            parameters.Add("@Description", model.Description);
+            parameters.Add("@ModifiedOn", ModifiedOn);
+            parameters.Add("@Id", Id);
+            </code>
+            <returns>
+            A ReturnValue object.
+            If the row is updated, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was updated.
+            If the row is not updated, ReturnValue.Success is false, ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.UpdateRowBaseAsync(System.String,Dapper.DynamicParameters)">
+            <summary>
+            Update a row in the table asynchronously
+            </summary>
+            <param name="sql">the sql UPDATE query to be executed for the specific table</param>
+            <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+            <code>
+            <para>Example of parameter construction:</para>
+            var sql = $@"UPDATE {TableName} SET ({Name}=@Name, {Description}=@Description, {ModifiedOn}=@ModifiedOn) WHERE {Id}=@Id;";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Name", model.Name);
+            parameters.Add("@Description", model.Description);
+            parameters.Add("@ModifiedOn", ModifiedOn);
+            parameters.Add("@Id", Id);
+            </code>
+            <returns>
+            A ReturnValue object.
+            If the row is updated, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was updated.
+            If the row is not updated, ReturnValue.Success is false, ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="M:Persistence.DbBaseLayer`2.ExecuteQuery(System.String,Dapper.DynamicParameters,System.String,System.String)">
+            <summary>
+            Executes a user query with Dapper DynamicParameters
+            </summary>
+            <param name="sql">A user defined SQL query</param>
+            <param name="parameters">The DynamicParameters to be used in this query</param>
+            <param name="errorMessage">User defined Error message to be returned in ReturnValue.Messages, defaults to ""</param>
+            <param name="successMessage">User defined Success message to be returned in ReturnValue.Messages, defaults to ""</param>
+            <returns>
+            A ReturnValue object.
+            If the query is successful, ReturnValue.Success is true, ReturnValue.Messages contains successMessage or nothing if the successMessage parameter was default.
+            If the query is not successful, ReturnValue.Success is false, ReturnValue.Messages contains errorMessage or nothing if the errorMessage parameter was default, and ReturnValue.Errors contains the exception message.
+            </returns>
+        </member>
+        <member name="T:Persistence.Helpers.DatabaseHelpers">
+            <summary>
+            This class is used to help with database operations such as creating a database, checking if the database is valid, and migrating the database up and down.
+            </summary>
+        </member>
+        <member name="M:Persistence.Helpers.DatabaseHelpers.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor for the DatabaseHelpers class.
+            </summary>
+            <param name="configuration">IConfiguration object which needs to have a connection string for the database</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
         <member name="M:Persistence.Helpers.DatabaseHelpers.IsConnectionStringValid">
             <summary>
             Checks if the connection string is valid by opening a connection and executing a simple query to the sql server.
@@ -24,9 +254,504 @@
             </summary>
             <returns>True if able to connect to the database and execute the basic query. False otherwise.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.CreateDatabase" -->
-        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.MigrateUp" -->
-        <!-- Badly formed XML comment ignored for member "M:Persistence.Helpers.DatabaseHelpers.MigrateDown(System.Int64)" -->
+        <member name="M:Persistence.Helpers.DatabaseHelpers.CreateDatabase">
+            <summary>
+            Creates a new database with the name specified in the connection string.
+            If the database already exists, this method will throw an exception.
+            </summary>
+            <returns>
+            ReturnValue.Success is true if the database is created.
+            If the database is not created: ReturnValue.Success = false, ReturnValue.Messages will have a vague creating database error message. ReturnValue.Errors will have the exception message
+            </returns>
+        </member>
+        <member name="M:Persistence.Helpers.DatabaseHelpers.MigrateUp">
+            <summary>
+            Does any new migrations to the database
+            </summary>
+            <returns>
+            ReturnValue.Success = true if the migration works correctly.
+            Otherwise, ReturnValue.Success = false, ReturnValue.Messages will have a vague message about not being able to migrate and ReturnValue.Errors will have the exception message
+            </returns>
+        </member>
+        <member name="M:Persistence.Helpers.DatabaseHelpers.MigrateDown(System.Int64)">
+            <summary>
+            Reverts the database to the version specified in the version parameter.
+            </summary>
+            <param name="version">this is in the form of YYYYMMDDXXXX where YYYY is the year of the version, MM is the month of the version, DD is the day of the version and XXXX is the specific version for that day</param>
+            <returns>
+            ReturnValue.Success = true if the migration works correctly.
+            Otherwise, ReturnValue.Success = false, ReturnValue.Messages will have a vague message about not being able to migrate and ReturnValue.Errors will have the exception message
+            </returns>
+        </member>
+        <member name="M:Persistence.Helpers.DataProtectionConfig.Initialize(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider)">
+            <summary>
+            Initializes the Data Protection Provider.
+            </summary>
+            <param name="protectionProvider">IDataProtectionProvider object used to protect various database data</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Persistence.Helpers.DataProtectionConfig.CreateProtector(System.String)">
+            <summary>
+            Creates a Data Protector object for the specified purpose.
+            </summary>
+            <param name="purpose">The string used to help protect the data prior to insertion into the database.</param>
+            <returns>An IDataProtector based on the purpose passed in.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:Persistence.IDbServicesInterface`1">
+            <summary>
+            Interface for the database services.
+            All Models will have a service that implements this interface.
+            The service will be responsible for all database operations.
+            Service will implement this via the DbLayerBase&lt;T&gt; class. 
+            which is an abstract class providing basic functionality for some methods.
+            </summary>
+            <typeparam name="T">T is the Model object</typeparam>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.UpdateRow(System.Int32,`0)">
+            <summary>
+            Updates a row in the database.
+            </summary>
+            <param name="id">the id of the row to update</param>
+            <param name="row">The T object that will set the updated values of the row.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was updated, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the update failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.UpdateRow(`0)">
+            <summary>
+            Updates a row in the database.
+            Used when the id of the row is not known. It is up to the implementing class
+            to determine how to find the row to update.
+            </summary>
+            <param name="row">The T object that will set the updated values of the row.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was updated, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the update failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.UpdateRowAsync(System.Int32,`0)">
+            <summary>
+            Inserts a row into the database asynchronously.
+            </summary>
+            <param name="id">the id of the row to update</param>
+            <param name="row">The T object that will set the updated values of the row.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was updated, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the update failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.UpdateRowAsync(`0)">
+            <summary>
+            Updates a row in the database asynchronously.
+            Used when the id of the row is not known. It is up to the implementing class
+            to determine how to find the row to update.
+            </summary>
+            <param name="row">The T object that will set the updated values of the row.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was updated, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the update failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.InsertRow(`0)">
+            <summary>
+            Inserts a row into the database.
+            </summary>
+            <param name="row">The T object that will become a new row in the database.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was inserted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the insert failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.InsertRowAsync(`0)">
+            <summary>
+            Inserts a row into the database asynchronously.
+            </summary>
+            <param name="row">The T object that will become a new row in the database.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was inserted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the insert failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.DeleteRow(`0)">
+            <summary>
+            Deletes a row from the database. It is up to the implementing class
+            to determine how to find the row to delete.
+            </summary>
+            <param name="row">The T object that will be used to determine which row gets deleteed.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was deleted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the delete failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.DeleteRowAsync(`0)">
+            <summary>
+            Deletes a row from the database asynchronously. It is up to the implementing class
+            to determine how to find the row to delete.
+            </summary>
+            <param name="row">The T object that will be used to determine which row gets deleteed.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was deleted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the delete failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetRow(`0)">
+            <summary>
+            Gets a row from the database. It is up to the implementing class
+            to determine how to find the row that will be returned.
+            </summary>
+            <param name="row">The T object that will be used to determine which row gets returned.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetRowAsync(`0)">
+            <summary>
+            Gets a row from the database asynchronously. It is up to the implementing class
+            to determine how to find the row that will be returned.
+            </summary>
+            <param name="row">The T object that will be used to determine which row gets returned.</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.DeleteRow(System.Int32)">
+            <summary>
+            Deletes a row from the database.
+            </summary>
+            <param name="id">The id of the row to be deleted</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was deleted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the delete failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.DeleteRowAsync(System.Int32)">
+            <summary>
+            Deletes a row from the database asynchronously.
+            </summary>
+            <param name="id">The id of the row to be deleted</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was deleted, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the delete failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetRow(System.Int32)">
+            <summary>
+            Gets a row from the database.
+            </summary>
+            <param name="id">The id of the row to be returned</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetRowAsync(System.Int32)">
+            <summary>
+            Gets a row from the database asynchronously.
+            </summary>
+            <param name="id">The id of the row to be returned</param>
+            <returns>
+            A ReturnValue object with Success = true if the row was found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetFirstXRows(System.Int32)">
+            <summary>
+            Gets all the rows from the database.
+            </summary>
+            <param name="x">x is the number of rows to return. An x $lt;= 0 will return all rows.</param>
+            <returns>
+            A ReturnValue object with Success = true if the rows were found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.IDbServicesInterface`1.GetFirstXRowsAsync(System.Int32)">
+            <summary>
+            Gets all the rows from the database asynchronously.
+            </summary>
+            <param name="x">x is the number of rows to return. An x $lt;= 0 will return all rows.</param>
+            <returns>
+            A ReturnValue object with Success = true if the rows were found, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            the get failed. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="T:Persistence.Models.AbstractBaseModel">
+            <summary>
+            Represents a base model for all models in the application.
+            This class is abstract and cannot be instantiated.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.AbstractBaseModel.Id">
+            <summary>
+            The unique identifier for the model.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.AbstractBaseModel.CreatedOn">
+            <summary>
+            The date and time the model was created.
+            The default value is the current date and time.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.AbstractBaseModel.ModifiedOn">
+            <summary>
+            The date and time the model was last modified.
+            The default value is the current date and time.
+            </summary>
+        </member>
+        <member name="T:Persistence.Models.Entry.EntryCategory">
+            <summary>
+            Represents a category that an entry can be associated with.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Entry.EntryCategory.Name">
+            <summary>
+            The name of the category.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Entry.EntryCategory.Description">
+            <summary>
+            A description of the category.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Entry.EntryCategory.DefaultCategory">
+            <summary>
+            The default category for an entry.
+            </summary>
+            <returns>A new EntryCategory with Name = string.Empty, Description = string.Empty and Id = -1 </returns>
+        </member>
+        <member name="T:Persistence.Models.Entry.EntryClassExtensions">
+            <summary>
+            Extension methods for the EntryCategory class.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Entry.EntryClassExtensions.ProtectData(Persistence.Models.Entry.EntryCategory)">
+            <summary>
+            Protects the data in the EntryCategory object. This method uses IDataProtectionProvider to protect the data.
+            Only the Name and Description properties are protected.
+            </summary>
+            <param name="entryCategory">this EntryCattegory object</param>
+            <returns>an EntryCategory object so that this method can be chained</returns>
+        </member>
+        <member name="M:Persistence.Models.Entry.EntryClassExtensions.UnprotectData(Persistence.Models.Entry.EntryCategory)">
+            <summary>
+            Unprotects the data in the EntryCategory object. This method uses IDataProtectionProvider to unprotect the data.
+            Only the Name and Description properties are unprotected.
+            </summary>
+            <param name="entryCategory">this EntryCategory object</param>
+            <returns>an EntryCategory object so that this method can be chained</returns>
+        </member>
+        <member name="T:Persistence.Models.Entry.Item">
+            <summary>
+            Represents a transaction that can be either an expense or an income.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Entry.Item.Name">
+            <summary>
+            The name of the transaction.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Entry.Item.Description">
+            <summary>
+            The description of the transaction.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Entry.Item.Amount">
+            <summary>
+            The amount of the transaction.
+            an amount greater than or equal to 0 is an income, otherwise it is an expense.
+            </summary>
+        </member>
+        <member name="T:Persistence.Models.Entry.ItemExtensions">
+            <summary>
+            Extension methods for the Item class.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Entry.ItemExtensions.ProtectData(Persistence.Models.Entry.Item)">
+            <summary>
+            Protects the data in the Item object. This method uses IDataProtectionProvider to protect the data.
+            Only the Name and Description properties are protected.
+            amount protection is a problem for later.
+            </summary>
+            <param name="item">this Item object</param>
+            <returns>an Item object so that this method can be chained</returns>
+        </member>
+        <member name="M:Persistence.Models.Entry.ItemExtensions.UnprotectData(Persistence.Models.Entry.Item)">
+            <summary>
+            Unprotects the data in the Item object. This method uses IDataProtectionProvider to unprotect the data.
+            Only the Name and Description properties are unprotected.
+            </summary>
+            <param name="item">this Item object</param>
+            <returns>an EntryCategory object so that this method can be chained</returns>
+        </member>
+        <member name="T:Persistence.Models.IBaseModel">
+            <summary>
+            This is the inteface for the base model for all models in the application.
+            This interface cannot be instantiated.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.IBaseModel.Id">
+            <summary>
+            The unique identifier for the model.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.IBaseModel.CreatedOn">
+            <summary>
+            The date and time the model was created.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.IBaseModel.ModifiedOn">
+            <summary>
+            The date and time the model was last modified.
+            </summary>
+        </member>
+        <member name="T:Persistence.Models.Identity.UserData">
+            <summary>
+            Represents a user in the application.
+            This class is used to store user data in the database.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Identity.UserData.Username">
+            <summary>
+            The username of the user.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Identity.UserData.Email">
+            <summary>
+            The email address of the user.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Identity.UserData.Password">
+            <summary>
+            The password of the user.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Identity.UserData.LastLogin">
+            <summary>
+            The date and time the user last logged in.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Identity.UserData.DefaultUser">
+            <summary>
+            The default user for the application.
+            </summary>
+            <returns>A UserData object with Username, Email, and Password set to string.Empty, LastLogin set to DateTime.Now, and Id set to -1.</returns>
+        </member>
+        <member name="T:Persistence.Models.Identity.UserDataExtensions">
+            <summary>
+            Extension methods for the UserData class.
+            These methods are used to protect and unprotect the data in the UserData object.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Identity.UserDataExtensions.ProtectData(Persistence.Models.Identity.UserData)">
+            <summary>
+            Protects the data in the UserData object. This method uses IDataProtectionProvider to protect the data.
+            Only the Username, Email, and Password properties are protected.
+            </summary>
+            <param name="userData">this UserData object</param>
+            <returns>A UserData object so that this method can be chained.</returns>
+        </member>
+        <member name="M:Persistence.Models.Identity.UserDataExtensions.UnprotectData(Persistence.Models.Identity.UserData)">
+            <summary>
+            Unprotects the data in the UserData object. This method uses IDataProtectionProvider to unprotect the data.
+            Only the Username, Email, and Password properties are unprotected.
+            </summary>
+            <param name="userData">this UserData object</param>
+            <returns>A UserData object so that this method can be chained </returns>
+        </member>
+        <member name="T:Persistence.ModelValidations.Entry.EntryCategoryValidation">
+            <summary>
+            Validates the EntryCategory model.
+            </summary>
+        </member>
+        <member name="M:Persistence.ModelValidations.Entry.EntryCategoryValidation.ValidateModel(Persistence.Models.Entry.EntryCategory)">
+            <summary>
+            Validates the EntryCategory model.
+            </summary>
+            <param name="model">the EntryCategory object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.Entry.EntryCategoryValidation.ValidateModelAsync(Persistence.Models.Entry.EntryCategory)">
+            <summary>
+            Validates the EntryCategory model asynchronously.
+            </summary>
+            <param name="model">the EntryCategory object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="T:Persistence.ModelValidations.Entry.ItemValidation">
+            <summary>
+            Validates the Item model.
+            </summary>
+        </member>
+        <member name="M:Persistence.ModelValidations.Entry.ItemValidation.ValidateModel(Persistence.Models.Entry.Item)">
+            <summary>
+            Validates the Item model.
+            </summary>
+            <param name="model">the Item object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.Entry.ItemValidation.ValidateModelAsync(Persistence.Models.Entry.Item)">
+            <summary>
+            Validates the Item model asynchronously.
+            </summary>
+            <param name="model">the Item object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="T:Persistence.ModelValidations.Identity.UserDataValidation">
+            <summary>
+            Validates the UserData model.
+            </summary>
+        </member>
+        <member name="M:Persistence.ModelValidations.Identity.UserDataValidation.ValidateModel(Persistence.Models.Identity.UserData)">
+            <summary>
+            Validates the UserData model.
+            </summary>
+            <param name="model">the UserData object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.Identity.UserDataValidation.ValidateModelAsync(Persistence.Models.Identity.UserData)">
+            <summary>
+            Validates the UserData model asynchronously.
+            </summary>
+            <param name="model">the UserData object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue object will contain a list of error messages.
+            </returns>
+        </member>
         <member name="T:Persistence.ModelValidations.IModelValidation`1">
             <summary>
             Used to validate a model.
@@ -40,6 +765,30 @@
             must meet specific requirements. The lack of a description should not cause the model to be invalid.
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Persistence.ModelValidations.IModelValidation`1.ValidateModel(`0)">
+            <summary>
+            Validates the model.
+            </summary>
+            <param name="model">the object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            validation failed. For example, if the password needs to be at least 8 characters 
+            and was only 7. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.IModelValidation`1.ValidateModelAsync(`0)">
+            <summary>
+            Validates the model asynchronously.
+            </summary>
+            <param name="model">the object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, the ReturnValue.Messages will contain the logical reasons why
+            validation failed. For example, if the password needs to be at least 8 characters 
+            and was only 7. ReturnValue.Errors will contain any exceptions messages that were thrown.
+            </returns>
         </member>
     </members>
 </doc>
