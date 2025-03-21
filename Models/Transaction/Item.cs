@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 
 using Persistence.Helpers;
 
-namespace Persistence.Models.Entry
+namespace Persistence.Models.Transaction
 {
     /// <summary>
     /// Represents a transaction that can be either an expense or an income.
@@ -14,14 +14,37 @@ namespace Persistence.Models.Entry
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// The description of the transaction.
+        /// A description or note for the transaction.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public string Note { get; set; } = string.Empty;
         /// <summary>
-        /// The amount of the transaction.
-        /// an amount greater than or equal to 0 is an income, otherwise it is an expense.
+        /// A boolean that indicates if the transaction is an expense or income.
+        /// True = Expense, False = Income
+        /// Default is true (Expense).
         /// </summary>
-        public decimal Amount { get; set; } = 0.0m;
+        public Boolean IsExpense { get; set; } = true;
+        /// <summary>
+        /// The amount of money budgeted to this item.
+        /// </summary>
+        public decimal BudgetAmount { get; set; } = 0.0m;
+        /// <summary>
+        /// The sum of the entries for this item.
+        /// </summary>
+        public decimal CurrentAmount { get; set; } = 0.0m;
+        /// <summary>
+        /// The foreign key to the Category table.
+        /// Default is -1.
+        /// </summary>
+        public int CategoryId { get; set; } = -1;
+
+        /// <summary>
+        /// The default item for an entry.
+        /// </summary>
+        /// <returns>An Item object with defaults set and Id = -1</returns>
+        public static Item DefaultItem()
+        {
+            return new Item { Id = -1 };
+        }
     }
 
     /// <summary>
@@ -34,7 +57,7 @@ namespace Persistence.Models.Entry
 
         /// <summary>
         /// Protects the data in the Item object. This method uses IDataProtectionProvider to protect the data.
-        /// Only the Name and Description properties are protected.
+        /// Only the Name and Note properties are protected.
         /// amount protection is a problem for later.
         /// </summary>
         /// <param name="item">this Item object</param>
@@ -43,14 +66,14 @@ namespace Persistence.Models.Entry
         {
             var dataProtector = DataProtectionConfig.CreateProtector("Item");
             item.Name = dataProtector.Protect(item.Name);
-            item.Description = dataProtector.Protect(item.Description);
+            item.Note = dataProtector.Protect(item.Note);
 
             return item;
         }
 
         /// <summary>
         /// Unprotects the data in the Item object. This method uses IDataProtectionProvider to unprotect the data.
-        /// Only the Name and Description properties are unprotected.
+        /// Only the Name and Note properties are unprotected.
         /// </summary>
         /// <param name="item">this Item object</param>
         /// <returns>an EntryCategory object so that this method can be chained</returns>
@@ -58,7 +81,7 @@ namespace Persistence.Models.Entry
         {
             var dataProtector = DataProtectionConfig.CreateProtector("Item");
             item.Name = dataProtector.Unprotect(item.Name);
-            item.Description = dataProtector.Unprotect(item.Description);
+            item.Note = dataProtector.Unprotect(item.Note);
 
             return item;
         }

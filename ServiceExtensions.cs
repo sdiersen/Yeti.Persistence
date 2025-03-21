@@ -1,20 +1,29 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+
 using Persistence.Helpers;
-using Persistence.Models.Entry;
+using Persistence.Models.Transaction;
 using Persistence.Models.Identity;
 using Persistence.ModelValidations;
-using Persistence.ModelValidations.Entry;
+using Persistence.ModelValidations.Transaction;
 using Persistence.ModelValidations.Identity;
 
 namespace Persistence
 {
+    /// <summary>
+    /// Extension methods for the IServiceCollection interface.
+    /// </summary>
     public static class ServiceExtensions
     {
+        /// <summary>
+        /// Adds custom model validation services to the service collection.
+        /// </summary>
+        /// <param name="services">IServiceCollection object</param>
+        /// <exception cref="InvalidOperationException">Thrown when Data Protection Provider is not available.</exception>
         public static void CustomModelValidationServices(this IServiceCollection services)
         {
             //Entry Services
-            services.AddScoped<IModelValidation<EntryCategory>, EntryCategoryValidation>();
+            services.AddScoped<IModelValidation<Category>, CategoryValidation>();
             services.AddScoped<IModelValidation<Item>, ItemValidation>();
 
             //Identity Services

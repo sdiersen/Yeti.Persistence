@@ -4,6 +4,193 @@
         <name>Persistence</name>
     </assembly>
     <members>
+        <member name="T:Persistence.Migrations.Constants.DbCommonColumns">
+            <summary>
+            Common columns used for all tables
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCommonColumns.ID">
+            <summary>
+            The Id column name.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCommonColumns.CREATED_ON">
+            <summary>
+            The CreatedOn column name.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCommonColumns.MODIFIED_ON">
+            <summary>
+            The ModifiedOn column name.
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbTableNames">
+            <summary>
+            Constant table names for the database.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbTableNames.USER_DATA_TABLE">
+            <summary>
+            The table that holds the user data.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbTableNames.ITEM_TABLE">
+            <summary>
+            This table holds Items. These are specific buckets in a Category.
+            i.e. Household might be the Category and Electrical might be the Item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbTableNames.CATEGORY_TABLE">
+            <summary>
+            This is the Category table. It holds all of the categories. 
+            i.e. Household, Entertainment, etc.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbTableNames.CATEGORY_ITEM_TABLE">
+            <summary>
+            This table holds the relationship between Category and Item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbTableNames.ENTRY_TABLE">
+            <summary>
+            This table holds the entries. These are the transactions that happen.
+            i.e. $20.00 for a movie ticket.
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbCategoryItemTable">
+            <summary>
+            Constant column names for the CategoryItem table.
+            CategoryItem is a one-to-many relationship between Category and Item
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCategoryItemTable.ITEM_ID">
+            <summary>
+            This is a foreign key to the Item table.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCategoryItemTable.CATEGORY_ID">
+            <summary>
+            This is a foreign key to the Category table.
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbCategoryTable">
+            <summary>
+            Constant column names for the EntryCategory table.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCategoryTable.NAME">
+            <summary>
+            The name of a category that entries can belong to.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbCategoryTable.DESCRIPTION">
+            <summary>
+            What is this category about?
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbEntryTable">
+            <summary>
+            Constant column names for the Entry table.
+            The Entry table represents a single entry of money into or out of the budget.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.ENTRY_DATE">
+            <summary>
+            The date the transaction happened.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.AMOUNT">
+            <summary>
+            The amount of the transaction.
+            This can be positive or negative.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.IS_EXPENSE">
+            <summary>
+            This is a boolean that indicates if the transaction is an expense or income.
+            True = Expense, False = Income
+            This is independnt of the Item's IsExpense.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.NOTE">
+            <summary>
+            This is an optional entry that will be a descrption or note about the transaction.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.ITEM_ID">
+            <summary>
+            This is a foreign key to the Item table.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbEntryTable.CATEGORY_ID">
+            <summary>
+            This is a foreign key to the Category table.
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbItemTable">
+            <summary>
+            Constant column names for the Item table.
+            The item table represents items within a Category.
+            For example, Household might be the Category and Electrical might be the Item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.NAME">
+            <summary>
+            The name of a the item in a Category.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.NOTE">
+            <summary>
+            This is an optional entry that will be a descrption or note about the item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.IS_EXPENSE">
+            <summary>
+            This is a boolean that indicates if the item is an expense or income.
+            True = Expense, False = Income
+            This is for the overall Item, individual entries will have their own IsExpense.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.BUDGET_AMOUNT">
+            <summary>
+            This is the amount that is budgeted to this item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.CURRENT_AMOUNT">
+            <summary>
+            This is the sum of the entries for this item.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbItemTable.CATEGORY_ID">
+            <summary>
+            This is a foreign key to the Category table.
+            </summary>
+        </member>
+        <member name="T:Persistence.Migrations.Constants.DbUserDataTable">
+            <summary>
+            Column constant strings for UserData table
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbUserDataTable.USERNAME">
+            <summary>
+            The UserName column name.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbUserDataTable.EMAIL">
+            <summary>
+            The Email column name.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbUserDataTable.PASSWORD">
+            <summary>
+            The Password column name.
+            </summary>
+        </member>
+        <member name="F:Persistence.Migrations.Constants.DbUserDataTable.LAST_LOGIN">
+            <summary>
+            The Salt column name.
+            </summary>
+        </member>
         <member name="T:Persistence.DbBaseLayer`2">
             <summary>
             
@@ -517,87 +704,183 @@
             The default value is the current date and time.
             </summary>
         </member>
-        <member name="T:Persistence.Models.Entry.EntryCategory">
+        <member name="T:Persistence.Models.Transaction.Category">
             <summary>
             Represents a category that an entry can be associated with.
             </summary>
         </member>
-        <member name="P:Persistence.Models.Entry.EntryCategory.Name">
+        <member name="P:Persistence.Models.Transaction.Category.Name">
             <summary>
             The name of the category.
             </summary>
         </member>
-        <member name="P:Persistence.Models.Entry.EntryCategory.Description">
+        <member name="P:Persistence.Models.Transaction.Category.Description">
             <summary>
             A description of the category.
             </summary>
         </member>
-        <member name="M:Persistence.Models.Entry.EntryCategory.DefaultCategory">
+        <member name="M:Persistence.Models.Transaction.Category.DefaultCategory">
             <summary>
             The default category for an entry.
             </summary>
             <returns>A new EntryCategory with Name = string.Empty, Description = string.Empty and Id = -1 </returns>
         </member>
-        <member name="T:Persistence.Models.Entry.EntryClassExtensions">
+        <member name="T:Persistence.Models.Transaction.CategoryExtensions">
             <summary>
             Extension methods for the EntryCategory class.
             </summary>
         </member>
-        <member name="M:Persistence.Models.Entry.EntryClassExtensions.ProtectData(Persistence.Models.Entry.EntryCategory)">
+        <member name="M:Persistence.Models.Transaction.CategoryExtensions.ProtectData(Persistence.Models.Transaction.Category)">
             <summary>
-            Protects the data in the EntryCategory object. This method uses IDataProtectionProvider to protect the data.
+            Protects the data in the Category object. This method uses IDataProtectionProvider to protect the data.
             Only the Name and Description properties are protected.
             </summary>
-            <param name="entryCategory">this EntryCattegory object</param>
+            <param name="category">this Category object</param>
             <returns>an EntryCategory object so that this method can be chained</returns>
         </member>
-        <member name="M:Persistence.Models.Entry.EntryClassExtensions.UnprotectData(Persistence.Models.Entry.EntryCategory)">
+        <member name="M:Persistence.Models.Transaction.CategoryExtensions.UnprotectData(Persistence.Models.Transaction.Category)">
             <summary>
-            Unprotects the data in the EntryCategory object. This method uses IDataProtectionProvider to unprotect the data.
+            Unprotects the data in the Category object. This method uses IDataProtectionProvider to unprotect the data.
             Only the Name and Description properties are unprotected.
             </summary>
-            <param name="entryCategory">this EntryCategory object</param>
+            <param name="Category">this Category object</param>
             <returns>an EntryCategory object so that this method can be chained</returns>
         </member>
-        <member name="T:Persistence.Models.Entry.Item">
+        <member name="T:Persistence.Models.Transaction.CategoryItem">
+            <summary>
+            This is a junction table between Category and Item.
+            This table is used to associate categories with their items.
+            This is a One-to-Many relationship between Category and Item.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.CategoryItem.ItemId">
+            <summary>
+            The foreign key to the Item table.
+            The default is -1.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.CategoryItem.CategoryId">
+            <summary>
+            The foreign key to the Category table.
+            The default is -1.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Transaction.CategoryItem.DefaultCategoryItem">
+            <summary>
+            The default CategoryItem object
+            </summary>
+            <returns>A CategoryItem object with Id = -1</returns>
+        </member>
+        <member name="T:Persistence.Models.Transaction.Entry">
             <summary>
             Represents a transaction that can be either an expense or an income.
             </summary>
         </member>
-        <member name="P:Persistence.Models.Entry.Item.Name">
+        <member name="P:Persistence.Models.Transaction.Entry.EntryDate">
+            <summary>
+            The date the transaction happened. This will default to when the object was created.
+            This value should be the actual date of the transaction.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Entry.Amount">
+            <summary>
+            The amount of the transaction.
+            This can be positive or negative.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Entry.IsExpense">
+            <summary>
+            This is a boolean that indicates if the transaction is an expense or income.
+            True = Expense, False = Income
+            This is independnt of the Item's IsExpense.
+            Default is true (Expense).
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Entry.Note">
+            <summary>
+            This is an optional entry that will be a descrption or note about the transaction.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Entry.ItemId">
+            <summary>
+            The foreign key to the Item table.
+            Default is -1.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Entry.CategoryId">
+            <summary>
+            The foreign key to the Category table.
+            Default is -1.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Transaction.Entry.DefaultEntry">
+            <summary>
+            The default entry for an entry.
+            </summary>
+            <returns>An Entry object with defaults. Id defaults to -1.</returns>
+        </member>
+        <member name="T:Persistence.Models.Transaction.Item">
+            <summary>
+            Represents a transaction that can be either an expense or an income.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Item.Name">
             <summary>
             The name of the transaction.
             </summary>
         </member>
-        <member name="P:Persistence.Models.Entry.Item.Description">
+        <member name="P:Persistence.Models.Transaction.Item.Note">
             <summary>
-            The description of the transaction.
+            A description or note for the transaction.
             </summary>
         </member>
-        <member name="P:Persistence.Models.Entry.Item.Amount">
+        <member name="P:Persistence.Models.Transaction.Item.IsExpense">
             <summary>
-            The amount of the transaction.
-            an amount greater than or equal to 0 is an income, otherwise it is an expense.
+            A boolean that indicates if the transaction is an expense or income.
+            True = Expense, False = Income
+            Default is true (Expense).
             </summary>
         </member>
-        <member name="T:Persistence.Models.Entry.ItemExtensions">
+        <member name="P:Persistence.Models.Transaction.Item.BudgetAmount">
+            <summary>
+            The amount of money budgeted to this item.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Item.CurrentAmount">
+            <summary>
+            The sum of the entries for this item.
+            </summary>
+        </member>
+        <member name="P:Persistence.Models.Transaction.Item.CategoryId">
+            <summary>
+            The foreign key to the Category table.
+            Default is -1.
+            </summary>
+        </member>
+        <member name="M:Persistence.Models.Transaction.Item.DefaultItem">
+            <summary>
+            The default item for an entry.
+            </summary>
+            <returns>An Item object with defaults set and Id = -1</returns>
+        </member>
+        <member name="T:Persistence.Models.Transaction.ItemExtensions">
             <summary>
             Extension methods for the Item class.
             </summary>
         </member>
-        <member name="M:Persistence.Models.Entry.ItemExtensions.ProtectData(Persistence.Models.Entry.Item)">
+        <member name="M:Persistence.Models.Transaction.ItemExtensions.ProtectData(Persistence.Models.Transaction.Item)">
             <summary>
             Protects the data in the Item object. This method uses IDataProtectionProvider to protect the data.
-            Only the Name and Description properties are protected.
+            Only the Name and Note properties are protected.
             amount protection is a problem for later.
             </summary>
             <param name="item">this Item object</param>
             <returns>an Item object so that this method can be chained</returns>
         </member>
-        <member name="M:Persistence.Models.Entry.ItemExtensions.UnprotectData(Persistence.Models.Entry.Item)">
+        <member name="M:Persistence.Models.Transaction.ItemExtensions.UnprotectData(Persistence.Models.Transaction.Item)">
             <summary>
             Unprotects the data in the Item object. This method uses IDataProtectionProvider to unprotect the data.
-            Only the Name and Description properties are unprotected.
+            Only the Name and Note properties are unprotected.
             </summary>
             <param name="item">this Item object</param>
             <returns>an EntryCategory object so that this method can be chained</returns>
@@ -677,54 +960,106 @@
             <param name="userData">this UserData object</param>
             <returns>A UserData object so that this method can be chained </returns>
         </member>
-        <member name="T:Persistence.ModelValidations.Entry.EntryCategoryValidation">
+        <member name="T:Persistence.ModelValidations.Transaction.CategoryItemValidation">
             <summary>
-            Validates the EntryCategory model.
+            Validates the CategoryItem model.
             </summary>
         </member>
-        <member name="M:Persistence.ModelValidations.Entry.EntryCategoryValidation.ValidateModel(Persistence.Models.Entry.EntryCategory)">
+        <member name="M:Persistence.ModelValidations.Transaction.CategoryItemValidation.ValidateModel(Persistence.Models.Transaction.CategoryItem)">
             <summary>
-            Validates the EntryCategory model.
+            Validates the CategoryItem model. Only tests that the Id's provided are in a valid format.
+            Does not test the Id for the CategoryItem object itself.
             </summary>
-            <param name="model">the EntryCategory object to be validated</param>
+            <param name="model">CategoryItem object to be validated</param>
             <returns>
             A ReturnValue object with Success = true if the model is valid, false otherwise.
-            If Success = false, the ReturnValue object will contain a list of error messages.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
             </returns>
         </member>
-        <member name="M:Persistence.ModelValidations.Entry.EntryCategoryValidation.ValidateModelAsync(Persistence.Models.Entry.EntryCategory)">
+        <member name="M:Persistence.ModelValidations.Transaction.CategoryItemValidation.ValidateModelAsync(Persistence.Models.Transaction.CategoryItem)">
             <summary>
-            Validates the EntryCategory model asynchronously.
+            Validates the CategoryItem model asynchronously. Only tests that the Id's provided are in a valid format.
+            Does not test the Id for the CategoryItem object itself.
             </summary>
-            <param name="model">the EntryCategory object to be validated</param>
+            <param name="model">CategoryItem object to be validated</param>
             <returns>
             A ReturnValue object with Success = true if the model is valid, false otherwise.
-            If Success = false, the ReturnValue object will contain a list of error messages.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
             </returns>
         </member>
-        <member name="T:Persistence.ModelValidations.Entry.ItemValidation">
+        <member name="T:Persistence.ModelValidations.Transaction.CategoryValidation">
+            <summary>
+            Validates the Category model.
+            </summary>
+        </member>
+        <member name="M:Persistence.ModelValidations.Transaction.CategoryValidation.ValidateModel(Persistence.Models.Transaction.Category)">
+            <summary>
+            Validates the Category model.
+            </summary>
+            <param name="model">the Category object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.Transaction.CategoryValidation.ValidateModelAsync(Persistence.Models.Transaction.Category)">
+            <summary>
+            Validates the Category model asynchronously.
+            </summary>
+            <param name="model">the Category object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="T:Persistence.ModelValidations.Transaction.EntryValidation">
+            <summary>
+            Validates the Entry model.
+            </summary>
+        </member>
+        <member name="M:Persistence.ModelValidations.Transaction.EntryValidation.ValidateModel(Persistence.Models.Transaction.Entry)">
+            <summary>
+            Validates the Entry model.
+            </summary>
+            <param name="model">A Entry object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="M:Persistence.ModelValidations.Transaction.EntryValidation.ValidateModelAsync(Persistence.Models.Transaction.Entry)">
+            <summary>
+            Validates the Entry model asynchronously.
+            </summary>
+            <param name="model">An Entry object to be validated</param>
+            <returns>
+            A ReturnValue object with Success = true if the model is valid, false otherwise.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
+            </returns>
+        </member>
+        <member name="T:Persistence.ModelValidations.Transaction.ItemValidation">
             <summary>
             Validates the Item model.
             </summary>
         </member>
-        <member name="M:Persistence.ModelValidations.Entry.ItemValidation.ValidateModel(Persistence.Models.Entry.Item)">
+        <member name="M:Persistence.ModelValidations.Transaction.ItemValidation.ValidateModel(Persistence.Models.Transaction.Item)">
             <summary>
             Validates the Item model.
             </summary>
             <param name="model">the Item object to be validated</param>
             <returns>
             A ReturnValue object with Success = true if the model is valid, false otherwise.
-            If Success = false, the ReturnValue object will contain a list of error messages.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
             </returns>
         </member>
-        <member name="M:Persistence.ModelValidations.Entry.ItemValidation.ValidateModelAsync(Persistence.Models.Entry.Item)">
+        <member name="M:Persistence.ModelValidations.Transaction.ItemValidation.ValidateModelAsync(Persistence.Models.Transaction.Item)">
             <summary>
             Validates the Item model asynchronously.
             </summary>
             <param name="model">the Item object to be validated</param>
             <returns>
             A ReturnValue object with Success = true if the model is valid, false otherwise.
-            If Success = false, the ReturnValue object will contain a list of error messages.
+            If Success = false, ReturnValue.messages will contain a list of error messages.
             </returns>
         </member>
         <member name="T:Persistence.ModelValidations.Identity.UserDataValidation">
@@ -789,6 +1124,18 @@
             validation failed. For example, if the password needs to be at least 8 characters 
             and was only 7. ReturnValue.Errors will contain any exceptions messages that were thrown.
             </returns>
+        </member>
+        <member name="T:Persistence.ServiceExtensions">
+            <summary>
+            Extension methods for the IServiceCollection interface.
+            </summary>
+        </member>
+        <member name="M:Persistence.ServiceExtensions.CustomModelValidationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds custom model validation services to the service collection.
+            </summary>
+            <param name="services">IServiceCollection object</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when Data Protection Provider is not available.</exception>
         </member>
     </members>
 </doc>

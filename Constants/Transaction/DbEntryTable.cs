@@ -16,6 +16,12 @@ namespace Persistence.Migrations.Constants
         /// </summary>
         public const string AMOUNT = "Amount";
         /// <summary>
+        /// This is a boolean that indicates if the transaction is an expense or income.
+        /// True = Expense, False = Income
+        /// This is independnt of the Item's IsExpense.
+        /// </summary>
+        public const string IS_EXPENSE = "IsExpense";
+        /// <summary>
         /// This is an optional entry that will be a descrption or note about the transaction.
         /// </summary>
         public const string NOTE = "Note";

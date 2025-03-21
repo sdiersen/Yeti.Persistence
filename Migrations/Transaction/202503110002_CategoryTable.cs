@@ -7,11 +7,11 @@ using Persistence.Migrations.Constants;
 namespace Persistence.Migrations
 {
     [Migration(202503110002)]
-    public class EntryCategoryTable : Migration
+    public class CategoryTable : Migration
     {
         public override void Up()
         {
-            Create.Table($"{DbTableNames.ENTRY_CATEGORY_TABLE}")
+            Create.Table($"{DbTableNames.CATEGORY_TABLE}")
                 .WithColumn($"{DbCategoryTable.ID}").AsInt32().PrimaryKey().Identity()
                 .WithColumn($"{DbCategoryTable.NAME}").AsString().NotNullable()
                 .WithColumn($"{DbCategoryTable.DESCRIPTION}").AsString().Nullable()
@@ -20,7 +20,10 @@ namespace Persistence.Migrations
         }
         public override void Down()
         {
-            Delete.Table($"{DbTableNames.ENTRY_CATEGORY_TABLE}");
+            // Delete the dependent CategoryItemTable first, if it exists
+            Delete.Table($"{DbTableNames.CATEGORY_ITEM_TABLE}").IfExists();
+
+            Delete.Table($"{DbTableNames.CATEGORY_TABLE}");
         }
     }
 }
