@@ -6,14 +6,18 @@
     <Nullable>enable</Nullable>
 	<PackageId>FlyingFury.Yeti.Persistence</PackageId>
 	<Version>$(GitVersion_FullSemVer)</Version>
-	<Authors>Flying Fury</Authors>
+	<Authors>Steve Diersen</Authors>
 	<Company>Flying Fury</Company>
 	<Description>Database access layer for the Yeti project</Description>
-	<PackageTags>Persistance</PackageTags>
+	<PackageTags>Persistance; Database; FluentMigrator</PackageTags>
+	<RepositoryType>git</RepositoryType>
+	<RepositoryUrl>https://github.com/sdiersen/Yeti.Persistence</RepositoryUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<Copyright>Copyright © Flying Fury 2025</Copyright>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<DocumentationFile>Persistance.xml</DocumentationFile>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<DebugType>Portable</DebugType>
+	<DebugType>embedded</DebugType>
 	<IncludeSource>True</IncludeSource>
   </PropertyGroup>
   <ItemGroup>
