@@ -43,4 +43,11 @@ public interface IDatabaseHelpers
     /// Otherwise, ReturnValue.Success = false, ReturnValue.Messages will have a vague message about not being able to migrate and ReturnValue.Errors will have the exception message
     /// </returns>
     ReturnValue MigrateUp();
+
+    /// <summary>
+    /// This is a single method that will check the database connection string, check if the database is valid, create the database if necessary
+    /// and migrate the databse to the laatest version.
+    /// </summary>
+    /// <returns>Based on the four methods: IsConnectionStringValid, IsDatabaseValid, CreateDatabase, MigrateUp</returns>
+    ReturnValue DatabaseStartUp();
 }

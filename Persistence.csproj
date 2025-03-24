@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageId>FlyingFury.Yeti.Persistence</PackageId>
-	<Version>0.0.4</Version>
+	<Version>0.0.6</Version>
 	<Authors>Steve Diersen</Authors>
 	<Company>Flying Fury</Company>
 	<Description>Database access layer for the Yeti project</Description>

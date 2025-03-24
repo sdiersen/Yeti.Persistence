@@ -177,6 +177,40 @@ namespace Persistence.Helpers
             return returnValue;
         }
 
+        /// <summary>
+        /// This is a single method that will check the database connection string, check if the database is valid, create the database if necessary
+        /// and migrate the databse to the laatest version.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnValue DatabaseStartUp()
+        {
+            var returnValue = new ReturnValue();
+            if (!IsConnectionStringValid())
+            {
+                returnValue.Messages.Add("Connection string is invalid.");
+                return returnValue;
+            }
+            if (!IsDatabaseValid())
+            {
+                var createDatabaseReturnValue = CreateDatabase();
+                if (!createDatabaseReturnValue.Success)
+                {
+                    returnValue.Messages.Add("Error creating database.");
+                    returnValue.Errors.AddRange(createDatabaseReturnValue.Errors);
+                    return returnValue;
+                }
+            }
+            var migrateUpReturnValue = MigrateUp();
+            if (!migrateUpReturnValue.Success)
+            {
+                returnValue.Messages.Add("Error migrating database up.");
+                returnValue.Errors.AddRange(migrateUpReturnValue.Errors);
+                return returnValue;
+            }
+            returnValue.Success = true;
+            return returnValue;
+        }
+
         // TODO: this seems like it should work wth InitialCatalog and Database, but does it work for other
         // ways of naming the database, such as Data Source (ODBC), DBQ (Oracle and Access), or legacy terms. 
         private string GetDatabaseName()
