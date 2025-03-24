@@ -312,6 +312,7 @@ namespace Persistence
         /// </summary>
         /// <param name="sql">the sql INSERT query to be executed for the specific table</param>
         /// <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+        /// <example>
         /// <code>
         /// <para>Example of parameter construction:</para>
         /// var sql = $@"INSERT INTO {TableName} (Name, Description, CreatedOn, ModifiedOn) VALUES (@Name, @Description, @CreatedOn, @ModifiedOn);";
@@ -321,6 +322,7 @@ namespace Persistence
         /// parameters.Add("@CreatedOn", CreatedOn);
         /// parameters.Add("@ModifiedOn", ModifiedOn);
         /// </code>
+        /// </example>
         /// <returns>
         /// A ReturnValue object.
         /// If the row is inserted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was inserted.
@@ -352,6 +354,7 @@ namespace Persistence
         /// </summary>
         /// <param name="sql">the sql INSERT query to be executed for the specific table</param>
         /// <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+        /// <example>
         /// <code>
         /// <para>Example of parameter construction:</para>
         /// var sql = $@"INSERT INTO {TableName} ({Name}, {Description}, {CreatedOn}, {ModifiedOn}) VALUES (@Name, @Description, @CreatedOn, @ModifiedOn);";
@@ -361,6 +364,7 @@ namespace Persistence
         /// parameters.Add("@CreatedOn", CreatedOn);
         /// parameters.Add("@ModifiedOn", ModifiedOn);
         /// </code>
+        /// </example>
         /// <returns>
         /// A ReturnValue object.
         /// If the row is inserted, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was inserted.
@@ -393,6 +397,7 @@ namespace Persistence
         /// </summary>
         /// <param name="sql">the sql UPDATE query to be executed for the specific table</param>
         /// <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+        /// <example>
         /// <code>
         /// <para>Example of parameter construction:</para>
         /// var sql = $@"UPDATE {TableName} SET ({Name}=@Name, {Description}=@Description, {ModifiedOn}=@ModifiedOn) WHERE {Id}=@Id;";
@@ -402,6 +407,7 @@ namespace Persistence
         /// parameters.Add("@ModifiedOn", ModifiedOn);
         /// parameters.Add("@Id", Id);
         /// </code>
+        /// </example>
         /// <returns>
         /// A ReturnValue object.
         /// If the row is updated, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was updated.
@@ -434,6 +440,7 @@ namespace Persistence
         /// </summary>
         /// <param name="sql">the sql UPDATE query to be executed for the specific table</param>
         /// <param name="parameters">the parameters for the sql query using Dapper's DynamicParameters</param>
+        /// <example>
         /// <code>
         /// <para>Example of parameter construction:</para>
         /// var sql = $@"UPDATE {TableName} SET ({Name}=@Name, {Description}=@Description, {ModifiedOn}=@ModifiedOn) WHERE {Id}=@Id;";
@@ -443,6 +450,7 @@ namespace Persistence
         /// parameters.Add("@ModifiedOn", ModifiedOn);
         /// parameters.Add("@Id", Id);
         /// </code>
+        /// </example>
         /// <returns>
         /// A ReturnValue object.
         /// If the row is updated, ReturnValue.Success is true, ReturnValue.Messages contains a message that the row was updated.

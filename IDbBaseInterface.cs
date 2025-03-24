@@ -169,7 +169,7 @@ namespace Persistence
         /// <summary>
         /// Gets all the rows from the database.
         /// </summary>
-        /// <param name="x">x is the number of rows to return. An x $lt;= 0 will return all rows.</param>
+        /// <param name="x">x is the number of rows to return. An x &lt;= 0 will return all rows.</param>
         /// <returns>
         /// A ReturnValue object with Success = true if the rows were found, false otherwise.
         /// If Success = false, the ReturnValue.Messages will contain the logical reasons why
@@ -179,7 +179,7 @@ namespace Persistence
         /// <summary>
         /// Gets all the rows from the database asynchronously.
         /// </summary>
-        /// <param name="x">x is the number of rows to return. An x $lt;= 0 will return all rows.</param>
+        /// <param name="x">x is the number of rows to return. An x &lt;= 0 will return all rows.</param>
         /// <returns>
         /// A ReturnValue object with Success = true if the rows were found, false otherwise.
         /// If Success = false, the ReturnValue.Messages will contain the logical reasons why

@@ -5,31 +5,30 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageId>FlyingFury.Yeti.Persistence</PackageId>
-	<Version>$(GitVersion_FullSemVer)</Version>
+	<Version>0.0.4</Version>
 	<Authors>Steve Diersen</Authors>
 	<Company>Flying Fury</Company>
 	<Description>Database access layer for the Yeti project</Description>
 	<PackageTags>Persistance; Database; FluentMigrator</PackageTags>
 	<RepositoryType>git</RepositoryType>
-	<RepositoryUrl>https://github.com/sdiersen/Yeti.Persistence</RepositoryUrl>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<Copyright>Copyright © Flying Fury 2025</Copyright>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<DocumentationFile>Persistance.xml</DocumentationFile>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<DebugType>embedded</DebugType>
 	<IncludeSource>True</IncludeSource>
   </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="Dapper" Version="2.1.66" />
-	<PackageReference Include="FluentMigrator" Version="6.2.0" />
-	<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="6.2.0" />
-	<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="6.2.0" />	
+	<PackageReference Include="FluentMigrator" Version="7.0.0" />
+	<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="7.0.0" />
+	<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="7.0.0" />	
 	<PackageReference Include="FlyingFury.Libraries.ErrorHandling" Version="0.0.1" />	
-	<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.14" />	
-	<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.14" />
+	<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.3" />	
+	<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.3" />
 	<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-	<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
+	<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\$(Configuration)\$(TargetFramework)\Persistence.xml" Pack="true" PackagePath="lib\net9.0\" />
+</ItemGroup>	
 </Project>
