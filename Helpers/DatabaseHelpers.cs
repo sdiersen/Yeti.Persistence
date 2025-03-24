@@ -62,7 +62,6 @@ namespace Persistence.Helpers
                 using (var connection = new SqlConnection(_connectionString))
                 {
                     connection.Open();
-                    connection.Execute("SELECT 1");
                 }
                 return true;
             }
