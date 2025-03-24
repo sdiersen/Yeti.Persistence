@@ -1,14 +1,28 @@
 ﻿using Dapper;
+
 using ErrorHandling;
+
 using FluentMigrator.Runner;
+
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using Persistence.Migrations.Constants;
+
 using System.Reflection;
 
 namespace Persistence.Helpers
 {
+    public interface IDatabaseHelpers
+    {
+        ReturnValue CreateDatabase();
+        bool IsConnectionStringValid();
+        bool IsDatabaseValid();
+        ReturnValue MigrateDown(long version);
+        ReturnValue MigrateUp();
+    }
+
     //TODO: This class should be refactored into a private class with methods that deal specifically with the database in sql terms:
     //  - CreateDatabase
     //  - DropDatabase
@@ -19,7 +33,7 @@ namespace Persistence.Helpers
     /// <summary>
     /// This class is used to help with database operations such as creating a database, checking if the database is valid, and migrating the database up and down.
     /// </summary>
-    public class DatabaseHelpers
+    public class DatabaseHelpers : IDatabaseHelpers
     {
         private readonly string _connectionString;
         private readonly IServiceProvider _serviceProvider;

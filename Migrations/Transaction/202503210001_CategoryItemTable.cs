@@ -4,7 +4,7 @@ using FluentMigrator;
 
 using Persistence.Migrations.Constants;
 
-namespace Persistence.Migrations.Entry
+namespace Persistence.Migrations
 {
     [Migration(202503210001)]
     public class CategoryItem : Migration

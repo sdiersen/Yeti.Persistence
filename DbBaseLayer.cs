@@ -162,7 +162,7 @@ namespace Persistence
         }
 
         /// <summary>
-        /// Get the first numberOfRows from teh table
+        /// Get the first numberOfRows from the table
         /// if numberOfRows is less than or equal to 0, return all rows
         /// </summary>
         /// <param name="numberOfRows">the number of rows to return from the top of the table</param>
@@ -196,7 +196,7 @@ namespace Persistence
             }
         }
         /// <summary>
-        /// Get the first numberOfRows from teh table asynchronously 
+        /// Get the first numberOfRows from the table asynchronously 
         /// if numberOfRows is less than or equal to 0, return all rows
         /// </summary>
         /// <param name="numberOfRows">the number of rows to return from the top of the table</param>
