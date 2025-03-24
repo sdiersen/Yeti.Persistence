@@ -14,15 +14,6 @@ using System.Reflection;
 
 namespace Persistence.Helpers
 {
-    public interface IDatabaseHelpers
-    {
-        ReturnValue CreateDatabase();
-        bool IsConnectionStringValid();
-        bool IsDatabaseValid();
-        ReturnValue MigrateDown(long version);
-        ReturnValue MigrateUp();
-    }
-
     //TODO: This class should be refactored into a private class with methods that deal specifically with the database in sql terms:
     //  - CreateDatabase
     //  - DropDatabase
