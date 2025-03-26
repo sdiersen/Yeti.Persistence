@@ -25,7 +25,7 @@ namespace Persistence.Migrations.Constants
         /// This is the Category table. It holds all of the categories. 
         /// i.e. Household, Entertainment, etc.
         /// </summary>
-        public const string CATEGORY_TABLE = "dbo.Entry_Category";
+        public const string CATEGORY_TABLE = "dbo.Category";
         /// <summary>
         /// This table holds the relationship between Category and Item.
         /// </summary>

@@ -59,7 +59,7 @@ namespace Persistence.Helpers
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var connection = new SqlConnection(ConectionStringWithoutDatabase()))
                 {
                     connection.Open();
                 }
@@ -81,10 +81,11 @@ namespace Persistence.Helpers
             {
                 using (var connection = new SqlConnection(_connectionString))
                 {
-                    var command = new SqlCommand($"SELECT 1 FROM {DbTableNames.USER_DATA_TABLE}", connection);
-                    command.ExecuteScalar();
+                    connection.Open();
+                    var command = new SqlCommand($"SELECT database_id FROM sys.databases WHERE name = '{GetDatabaseName()}'", connection);
+                    var result = command.ExecuteScalar();
+                    return result != null;
                 }
-                return true;
             }
             catch (Exception)
             {
@@ -105,8 +106,9 @@ namespace Persistence.Helpers
             var retrunValue = new ReturnValue();
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var connection = new SqlConnection(ConectionStringWithoutDatabase()))
                 {
+                    connection.Open();
                     var sql = $"CREATE DATABASE {GetDatabaseName()}";
                     var command = new SqlCommand(sql, connection);
                     command.ExecuteNonQuery();
@@ -198,6 +200,20 @@ namespace Persistence.Helpers
                     returnValue.Errors.AddRange(createDatabaseReturnValue.Errors);
                     return returnValue;
                 }
+
+                // Retry mechanism to ensure the database is available
+                int retryCount = 5;
+                int delay = 2000; // 2 seconds
+                while (retryCount > 0)
+                {
+                    Console.WriteLine($"Waiting for the database to be available... try: {retryCount}");
+                    if (IsDatabaseValid())
+                    {
+                        break;
+                    }
+                    Thread.Sleep(delay);
+                    retryCount--;
+                }
             }
             var migrateUpReturnValue = MigrateUp();
             if (!migrateUpReturnValue.Success)
@@ -216,6 +232,13 @@ namespace Persistence.Helpers
         {
             var builder = new SqlConnectionStringBuilder(_connectionString);
             return builder.InitialCatalog;
+        }
+
+        private string ConectionStringWithoutDatabase()
+        {
+            var builder = new SqlConnectionStringBuilder(_connectionString);
+            builder.InitialCatalog = string.Empty; // Remove the database name
+            return builder.ToString();
         }
     }
 }

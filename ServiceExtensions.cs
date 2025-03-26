@@ -25,6 +25,8 @@ namespace Persistence
             //Entry Services
             services.AddScoped<IModelValidation<Category>, CategoryValidation>();
             services.AddScoped<IModelValidation<Item>, ItemValidation>();
+            services.AddScoped<IModelValidation<Entry>, EntryValidation>();
+            services.AddScoped<IModelValidation<CategoryItem>, CategoryItemValidation>();
 
             //Identity Services
             services.AddScoped<IModelValidation<UserData>, UserDataValidation>();
