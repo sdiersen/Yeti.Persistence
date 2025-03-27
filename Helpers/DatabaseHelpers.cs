@@ -54,29 +54,32 @@ namespace Persistence.Helpers
         /// <summary>
         /// Checks if the connection string is valid by opening a connection and executing a simple query to the sql server.
         /// </summary>
-        /// <returns>True if able to connect to the sql server with the connection string. False otherwise.</returns>
-        public bool IsConnectionStringValid()
+        /// <returns>ReturnValue object, Success=true on valid connection string. Success=false and exception in Errors on invalid connection string</returns>
+        public ReturnValue IsConnectionStringValid()
         {
+            var returnValue = new ReturnValue();
             try
             {
                 using (var connection = new SqlConnection(ConectionStringWithoutDatabase()))
                 {
                     connection.Open();
                 }
-                return true;
+                returnValue.Success = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                returnValue.Errors.Add(ex.Message);
             }
+            return returnValue;
         }
 
         /// <summary>
         /// Checks if the database is valid by opening a connection and executing a simple query.
         /// </summary>
-        /// <returns>True if able to connect to the database and execute the basic query. False otherwise.</returns>
-        public bool IsDatabaseValid()
+        /// <returns>ReturnValue object, Success=true on valid database. Success=false and exception in Errors on invalid or non-existent database.</returns>
+        public ReturnValue IsDatabaseValid()
         {
+            var returnValue = new ReturnValue();
             try
             {
                 using (var connection = new SqlConnection(_connectionString))
@@ -84,13 +87,18 @@ namespace Persistence.Helpers
                     connection.Open();
                     var command = new SqlCommand($"SELECT database_id FROM sys.databases WHERE name = '{GetDatabaseName()}'", connection);
                     var result = command.ExecuteScalar();
-                    return result != null;
+                    returnValue.Success = result != null;
+                    if (!returnValue.Success)
+                    {
+                        returnValue.Messages.Add("Database does not exist.");
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                returnValue.Errors.Add(ex.Message);
             }
+            return returnValue;
         }
 
         /// <summary>
@@ -186,17 +194,22 @@ namespace Persistence.Helpers
         public ReturnValue DatabaseStartUp()
         {
             var returnValue = new ReturnValue();
-            if (!IsConnectionStringValid())
+            var connectionStringReturnValue = IsConnectionStringValid();
+            if (!connectionStringReturnValue.Success)
             {
-                returnValue.Messages.Add("Connection string is invalid.");
+                returnValue.Messages.AddRange(connectionStringReturnValue.Messages);
+                returnValue.Errors.AddRange(connectionStringReturnValue.Errors);
                 return returnValue;
             }
-            if (!IsDatabaseValid())
+            var databaseValidReturnValue = IsDatabaseValid();
+            if (!databaseValidReturnValue.Success)
             {
+                returnValue.Messages.AddRange(databaseValidReturnValue.Messages);
+                returnValue.Errors.AddRange(databaseValidReturnValue.Errors);
                 var createDatabaseReturnValue = CreateDatabase();
                 if (!createDatabaseReturnValue.Success)
                 {
-                    returnValue.Messages.Add("Error creating database.");
+                    returnValue.Messages.AddRange(createDatabaseReturnValue.Messages);
                     returnValue.Errors.AddRange(createDatabaseReturnValue.Errors);
                     return returnValue;
                 }
@@ -207,7 +220,7 @@ namespace Persistence.Helpers
                 while (retryCount > 0)
                 {
                     Console.WriteLine($"Waiting for the database to be available... try: {retryCount}");
-                    if (IsDatabaseValid())
+                    if (IsDatabaseValid().Success)
                     {
                         break;
                     }
@@ -218,7 +231,7 @@ namespace Persistence.Helpers
             var migrateUpReturnValue = MigrateUp();
             if (!migrateUpReturnValue.Success)
             {
-                returnValue.Messages.Add("Error migrating database up.");
+                returnValue.Messages.AddRange(migrateUpReturnValue.Messages);
                 returnValue.Errors.AddRange(migrateUpReturnValue.Errors);
                 return returnValue;
             }

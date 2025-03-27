@@ -18,13 +18,13 @@ public interface IDatabaseHelpers
     /// <summary>
     /// Checks if the connection string is valid by opening a connection and executing a simple query to the sql server.
     /// </summary>
-    /// <returns>True if able to connect to the sql server with the connection string. False otherwise.</returns>
-    bool IsConnectionStringValid();
+    /// <returns>ReturnValue object, Success=true on valid connection string. Success=false and exception in Errors on invalid connection string</returns>
+    ReturnValue IsConnectionStringValid();
     /// <summary>
     /// Checks if the database is valid by opening a connection and executing a simple query.
     /// </summary>
-    /// <returns>True if able to connect to the database and execute the basic query. False otherwise.</returns>
-    bool IsDatabaseValid();
+    /// <returns>ReturnValue object, Success=true on valid database. Success=false and exception in Errors on invalid or non-existent database.</returns>
+    ReturnValue IsDatabaseValid();
     /// <summary>
     /// Reverts the database to the version specified in the version parameter.
     /// </summary>
