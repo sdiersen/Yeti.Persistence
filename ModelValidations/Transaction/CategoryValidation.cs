@@ -19,15 +19,11 @@ namespace Persistence.ModelValidations.Transaction
         /// </returns>
         public ReturnValue ValidateModel(Category model)
         {
-
-            var messages = new List<string>();
-            messages.AddRange(ValidateName(model.Name));
-            messages.AddRange(ValidateDescription(model.Description));
-            messages = ValidateDescription(model.Description);
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.AddMessageRangeToKey("name", ValidateName(model.Name));
+            returnValue.AddMessageRangeToKey("description", ValidateDescription(model.Description));
+            returnValue.Success = returnValue.Messages.Count == 0;
+
             return returnValue;
         }
 
@@ -43,14 +39,11 @@ namespace Persistence.ModelValidations.Transaction
         {
             await Task.Yield();
 
-            var messages = new List<string>();
-            messages.AddRange(ValidateName(model.Name));
-            messages.AddRange(ValidateDescription(model.Description));
-            messages = ValidateDescription(model.Description);
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.AddMessageRangeToKey("name", ValidateName(model.Name));
+            returnValue.AddMessageRangeToKey("description", ValidateDescription(model.Description));
+            returnValue.Success = returnValue.Messages.Count == 0;
+
             return returnValue;
         }
 

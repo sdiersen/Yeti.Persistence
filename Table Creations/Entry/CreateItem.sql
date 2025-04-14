@@ -1,8 +1,0 @@
-CREATE TABLE dbo.Item (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Name NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(500) NOT NULL,
-    Amount DECIMAL(18,2) NOT NULL,
-    Created_On DATETIME NOT NULL,
-    Modified_On DATETIME NOT NULL
-);

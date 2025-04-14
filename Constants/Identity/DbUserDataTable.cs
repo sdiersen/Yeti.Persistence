@@ -6,22 +6,16 @@ namespace Persistence.Migrations.Constants
     public class DbUserDataTable : DbCommonColumns
     {
         /// <summary>
-        /// The UserName column name.
+        /// First name of the user
         /// </summary>
-        public const string USERNAME = "UserName";
+        public const string FIRST_NAME = "FirstName";
         /// <summary>
-        /// The Email column name.
+        /// Last name of the user
         /// </summary>
-        public const string EMAIL = "Email";
+        public const string LAST_NAME = "LastName";
         /// <summary>
-        /// The Password column name.
+        /// User's date of birth
         /// </summary>
-        public const string PASSWORD = "Password";
-        /// <summary>
-        /// The Salt column name.
-        /// </summary>
-        public const string LAST_LOGIN = "LastLogin";
-
-
+        public const string DATE_OF_BIRTH = "DateOfBirth";
     }
 }

@@ -1,14 +1,10 @@
-﻿using Dapper;
-
-using ErrorHandling;
+﻿using ErrorHandling;
 
 using FluentMigrator.Runner;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
-using Persistence.Migrations.Constants;
 
 using System.Reflection;
 
@@ -68,7 +64,7 @@ namespace Persistence.Helpers
             }
             catch (Exception ex)
             {
-                returnValue.Errors.Add(ex.Message);
+                returnValue.AddError("database", ex.Message);
             }
             return returnValue;
         }
@@ -90,13 +86,13 @@ namespace Persistence.Helpers
                     returnValue.Success = result != null;
                     if (!returnValue.Success)
                     {
-                        returnValue.Messages.Add("Database does not exist.");
+                        returnValue.AddMessage("database", "Database does not exist.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                returnValue.Errors.Add(ex.Message);
+                returnValue.AddError("database", ex.Message);
             }
             return returnValue;
         }
@@ -125,8 +121,8 @@ namespace Persistence.Helpers
             }
             catch (Exception ex)
             {
-                retrunValue.Messages.Add("Error creating database.");
-                retrunValue.Errors.Add(ex.Message);
+                retrunValue.AddMessage("database", "Error creating database.");
+                retrunValue.AddError("database", ex.Message);
             }
             return retrunValue;
         }
@@ -151,8 +147,8 @@ namespace Persistence.Helpers
             }
             catch (Exception ex)
             {
-                returnValue.Messages.Add("Error migrating database up.");
-                returnValue.Errors.Add(ex.Message);
+                returnValue.AddMessage("database", "Error migrating database up.");
+                returnValue.AddError("database", ex.Message);
             }
             return returnValue;
 
@@ -180,8 +176,8 @@ namespace Persistence.Helpers
             }
             catch (Exception ex)
             {
-                returnValue.Messages.Add("Error migrating database down.");
-                returnValue.Errors.Add(ex.Message);
+                returnValue.AddMessage("database", "Error migrating database down.");
+                returnValue.AddError("database", ex.Message);
             }
             return returnValue;
         }
@@ -197,20 +193,20 @@ namespace Persistence.Helpers
             var connectionStringReturnValue = IsConnectionStringValid();
             if (!connectionStringReturnValue.Success)
             {
-                returnValue.Messages.AddRange(connectionStringReturnValue.Messages);
-                returnValue.Errors.AddRange(connectionStringReturnValue.Errors);
+                returnValue.AddMessageRange(connectionStringReturnValue.Messages);
+                returnValue.AddErrorRange(connectionStringReturnValue.Errors);
                 return returnValue;
             }
             var databaseValidReturnValue = IsDatabaseValid();
             if (!databaseValidReturnValue.Success)
             {
-                returnValue.Messages.AddRange(databaseValidReturnValue.Messages);
-                returnValue.Errors.AddRange(databaseValidReturnValue.Errors);
+                returnValue.AddMessageRange(databaseValidReturnValue.Messages);
+                returnValue.AddErrorRange(databaseValidReturnValue.Errors);
                 var createDatabaseReturnValue = CreateDatabase();
                 if (!createDatabaseReturnValue.Success)
                 {
-                    returnValue.Messages.AddRange(createDatabaseReturnValue.Messages);
-                    returnValue.Errors.AddRange(createDatabaseReturnValue.Errors);
+                    returnValue.AddMessageRange(createDatabaseReturnValue.Messages);
+                    returnValue.AddErrorRange(createDatabaseReturnValue.Errors);
                     return returnValue;
                 }
 
@@ -231,8 +227,8 @@ namespace Persistence.Helpers
             var migrateUpReturnValue = MigrateUp();
             if (!migrateUpReturnValue.Success)
             {
-                returnValue.Messages.AddRange(migrateUpReturnValue.Messages);
-                returnValue.Errors.AddRange(migrateUpReturnValue.Errors);
+                returnValue.AddMessageRange(migrateUpReturnValue.Messages);
+                returnValue.AddErrorRange(migrateUpReturnValue.Errors);
                 return returnValue;
             }
             returnValue.Success = true;

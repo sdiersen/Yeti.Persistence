@@ -1,6 +1,4 @@
 using ErrorHandling;
-
-using Microsoft.Extensions.Configuration;
 /// <summary>
 /// This class is used to help with database operations such as creating a database, checking if the database is valid, and migrating the database up and down.
 /// </summary>

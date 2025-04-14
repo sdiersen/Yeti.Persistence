@@ -13,7 +13,6 @@
 	<RepositoryType>git</RepositoryType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<Copyright>Copyright © Flying Fury 2025</Copyright>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<IncludeSource>True</IncludeSource>
   </PropertyGroup>
   <ItemGroup>
@@ -21,14 +20,25 @@
 	<PackageReference Include="FluentMigrator" Version="7.0.0" />
 	<PackageReference Include="FluentMigrator.Extensions.SqlServer" Version="7.0.0" />
 	<PackageReference Include="FluentMigrator.Runner.SqlServer" Version="7.0.0" />	
-	<PackageReference Include="FlyingFury.Libraries.ErrorHandling" Version="0.0.1" />	
 	<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.3" />	
-	<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.3" />
 	<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
 	<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\$(Configuration)\$(TargetFramework)\Persistence.xml" Pack="true" PackagePath="lib\net9.0\" />
-</ItemGroup>	
+</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ErrorHandling\ErrorHandling.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Identity\AccountRole\" />
+    <Folder Include="Services\Identity\Account\" />
+    <Folder Include="Services\Identity\Role\" />
+    <Folder Include="Services\Identity\UserData\" />
+    <Folder Include="Services\Transaction\CategoryItem\" />
+    <Folder Include="Services\Transaction\Category\" />
+    <Folder Include="Services\Transaction\Entry\" />
+    <Folder Include="Services\Transaction\Item\" />
+  </ItemGroup>	
 </Project>

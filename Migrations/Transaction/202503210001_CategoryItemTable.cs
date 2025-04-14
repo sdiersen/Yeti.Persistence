@@ -13,7 +13,9 @@ namespace Persistence.Migrations
         {
             Create.Table($"{DbTableNames.CATEGORY_ITEM_TABLE}")
                 .WithColumn($"{DbCategoryItemTable.ITEM_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.ITEM_TABLE, DbItemTable.ID)
-                .WithColumn($"{DbCategoryItemTable.CATEGORY_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.CATEGORY_TABLE, DbCategoryTable.ID);
+                .WithColumn($"{DbCategoryItemTable.CATEGORY_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.CATEGORY_TABLE, DbCategoryTable.ID)
+                .WithColumn($"{DbCategoryItemTable.CREATED_ON}").AsDateTime().NotNullable()
+                .WithColumn($"{DbCategoryItemTable.MODIFIED_ON}").AsDateTime().NotNullable();
         }
 
         public override void Down()

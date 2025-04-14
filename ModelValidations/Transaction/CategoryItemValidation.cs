@@ -1,6 +1,3 @@
-
-
-
 using ErrorHandling;
 
 using Persistence.Models.Transaction;
@@ -24,17 +21,15 @@ namespace Persistence.ModelValidations.Transaction
         public ReturnValue ValidateModel(CategoryItem model)
         {
             ReturnValue returnValue = new ReturnValue();
-            var messages = new List<string>();
             if (model.ItemId < 1)
             {
-                messages.Add("ItemId must be greater than 0.");
+                returnValue.AddMessage("itemid", "ItemId must be greater than 0.");
             }
             if (model.CategoryId < 1)
             {
-                messages.Add("CategoryId must be greater than 0.");
+                returnValue.AddMessage("categoryid", "CategoryId must be greater than 0.");
             }
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
 
         }
@@ -54,18 +49,15 @@ namespace Persistence.ModelValidations.Transaction
             await Task.Yield();
 
             ReturnValue returnValue = new ReturnValue();
-            var messages = new List<string>();
-
             if (model.ItemId < 1)
             {
-                messages.Add("ItemId must be greater than 0.");
+                returnValue.AddMessage("itemid", "ItemId must be greater than 0.");
             }
             if (model.CategoryId < 1)
             {
-                messages.Add("CategoryId must be greater than 0.");
+                returnValue.AddMessage("categoryid", "CategoryId must be greater than 0.");
             }
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
     }

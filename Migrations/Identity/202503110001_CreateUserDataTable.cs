@@ -13,10 +13,9 @@ namespace Persistence.Migrations
         {
             Create.Table($"{DbTableNames.USER_DATA_TABLE}")
                 .WithColumn($"{DbCommonColumns.ID}").AsInt32().PrimaryKey().Identity()
-                .WithColumn($"{DbUserDataTable.USERNAME}").AsString().NotNullable()
-                .WithColumn($"{DbUserDataTable.EMAIL}").AsString().NotNullable()
-                .WithColumn($"{DbUserDataTable.PASSWORD}").AsString().NotNullable()
-                .WithColumn($"{DbUserDataTable.LAST_LOGIN}").AsDateTime().NotNullable()
+                .WithColumn($"{DbUserDataTable.FIRST_NAME}").AsString(50).NotNullable()
+                .WithColumn($"{DbUserDataTable.LAST_NAME}").AsString(50).NotNullable()
+                .WithColumn($"{DbUserDataTable.DATE_OF_BIRTH}").AsDate().Nullable()
                 .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
                 .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();
         }

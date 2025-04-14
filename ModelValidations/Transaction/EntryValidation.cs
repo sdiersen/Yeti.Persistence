@@ -21,18 +21,14 @@ namespace Persistence.ModelValidations.Transaction
         /// </returns>
         public ReturnValue ValidateModel(Entry model)
         {
-            var messages = new List<string>();
-
-            messages.AddRange(ValidateDate(model.EntryDate));
-            messages.AddRange(ValidateAmount(model.Amount));
-            messages.AddRange(ValidateNote(model.Note));
-            messages.AddRange(ValidateItemId(model.ItemId));
-            messages.AddRange(ValidateCategoryId(model.CategoryId));
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
-
+            returnValue.AddMessageRangeToKey("entrydate", ValidateDate(model.EntryDate));
+            returnValue.AddMessageRangeToKey("amount", ValidateAmount(model.Amount));
+            returnValue.AddMessageRangeToKey("note", ValidateNote(model.Note));
+            returnValue.AddMessageRangeToKey("itemid", ValidateItemId(model.ItemId));
+            returnValue.AddMessageRangeToKey("categoryid", ValidateCategoryId(model.CategoryId));
+                        
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
 
@@ -48,18 +44,14 @@ namespace Persistence.ModelValidations.Transaction
         {
             await Task.Yield();
 
-            var messages = new List<string>();
-
-            messages.AddRange(ValidateDate(model.EntryDate));
-            messages.AddRange(ValidateAmount(model.Amount));
-            messages.AddRange(ValidateNote(model.Note));
-            messages.AddRange(ValidateItemId(model.ItemId));
-            messages.AddRange(ValidateCategoryId(model.CategoryId));
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.AddMessageRangeToKey("entrydate", ValidateDate(model.EntryDate));
+            returnValue.AddMessageRangeToKey("amount", ValidateAmount(model.Amount));
+            returnValue.AddMessageRangeToKey("note", ValidateNote(model.Note));
+            returnValue.AddMessageRangeToKey("itemid", ValidateItemId(model.ItemId));
+            returnValue.AddMessageRangeToKey("categoryid", ValidateCategoryId(model.CategoryId));
 
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
 

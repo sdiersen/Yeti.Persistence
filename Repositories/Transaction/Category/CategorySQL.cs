@@ -1,0 +1,32 @@
+﻿using Persistence.Migrations.Constants;
+
+namespace Persistence.Repositories.Transaction;
+internal class CategorySQL
+{
+    internal const string InsertRowSQL = @$"
+            INSERT INTO {DbTableNames.CATEGORY_TABLE}
+            (
+                {DbCategoryTable.NAME},
+                {DbCategoryTable.DESCRIPTION},
+                {DbCommonColumns.CREATED_ON},
+                {DbCommonColumns.MODIFIED_ON}    
+            )
+            VALUES
+            (
+                @Name,
+                @Description,
+                @CreatedOn,
+                @ModifiedOn
+            );
+        ";
+
+    internal const string UpdateRowSQL = @$"
+            UPDATE {DbTableNames.CATEGORY_TABLE}
+            SET
+                {DbCategoryTable.NAME} = @Name,
+                {DbCategoryTable.DESCRIPTION} = @Description,
+                {DbCommonColumns.MODIFIED_ON} = @ModifiedOn
+            WHERE
+                {DbCommonColumns.ID} = @Id;
+        ";
+}

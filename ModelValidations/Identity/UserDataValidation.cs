@@ -1,6 +1,3 @@
-
-using System.Text.RegularExpressions;
-
 using ErrorHandling;
 
 using Persistence.Models.Identity;
@@ -24,25 +21,10 @@ namespace Persistence.ModelValidations.Identity
         {
             ReturnValue returnValue = new ReturnValue();
 
-            List<string> messages = ValidateUserName(model.Username);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
+            returnValue.AddMessageRangeToKey("firstname", ValidateFirstName(model.FirstName));
+            returnValue.AddMessageRangeToKey("lastname", ValidateLastName(model.LastName));
+            returnValue.AddMessageRangeToKey("dob", ValidateDoB(model.DateOfBirth));
 
-            messages = ValidateEmail(model.Email);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
-
-            messages = ValidatePassword(model.Password);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
-
-            // if there are no errors
             returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
@@ -60,67 +42,53 @@ namespace Persistence.ModelValidations.Identity
             await Task.Yield();
 
             ReturnValue returnValue = new ReturnValue();
-            List<string> messages = ValidateUserName(model.Username);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
-            messages = ValidateEmail(model.Email);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
-            messages = ValidatePassword(model.Password);
-            if (messages.Count > 0)
-            {
-                returnValue.Messages.AddRange(messages);
-            }
+
+            returnValue.AddMessageRangeToKey("firstname", ValidateFirstName(model.FirstName));
+            returnValue.AddMessageRangeToKey("lastname", ValidateLastName(model.LastName));
+            returnValue.AddMessageRangeToKey("dob", ValidateDoB(model.DateOfBirth));
+
             returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
 
-        private static List<string> ValidateUserName(string username)
+        private static List<string> ValidateFirstName(string name)
         {
             List<string> messages = [];
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(name))
             {
-                messages.Add("Username is null or empty.");
+                messages.Add("First name is null or empty.");
             }
-            if (!Regex.IsMatch(username, @"^[a-zA-Z0-9]{3,20}$"))
+            if (name.Length > 50)
             {
-                messages.Add("Username must be between 3 and 20 characters long and contain only letters and numbers.");
+                messages.Add("First name is too long. Maximum length is 50 characters.");
             }
-
+            return messages;
+        }
+        private static List<string> ValidateLastName(string name)
+        {
+            List<string> messages = [];
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                messages.Add("Last name is null or empty.");
+            }
+            if (name.Length > 50)
+            {
+                messages.Add("Last name is too long. Maximum length is 50 characters.");
+            }
             return messages;
         }
 
-        private static List<string> ValidateEmail(string email)
+        private static List<string> ValidateDoB(DateOnly? dateOfBirth)
         {
             List<string> messages = [];
-            if (string.IsNullOrWhiteSpace(email))
+            if (dateOfBirth == null)
             {
-                messages.Add("Email is null or empty.");
+                messages.Add("Date of birth is null.");
             }
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            else if (dateOfBirth > DateOnly.FromDateTime(DateTime.Now))
             {
-                messages.Add("Email is not in the correct format.");
+                messages.Add("Date of birth cannot be in the future.");
             }
-
-            return messages;
-        }
-
-        private static List<string> ValidatePassword(string password)
-        {
-            List<string> messages = [];
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                messages.Add("Password is null or empty.");
-            }
-            if (!Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$"))
-            {
-                messages.Add("Password must be between 8 and 15 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.");
-            }
-
             return messages;
         }
     }

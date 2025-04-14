@@ -19,17 +19,13 @@ namespace Persistence.ModelValidations.Transaction
         /// </returns>
         public ReturnValue ValidateModel(Item model)
         {
-            var messages = new List<string>();
-
-            messages.AddRange(ValidateName(model.Name));
-            messages.AddRange(ValidateNote(model.Note));
-            messages.AddRange(ValidateBudgetAmount(model.BudgetAmount));
-            messages.AddRange(ValidateCategoryId(model.CategoryId));
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.AddMessageRangeToKey("name", ValidateName(model.Name));
+            returnValue.AddMessageRangeToKey("note", ValidateNote(model.Note));
+            returnValue.AddMessageRangeToKey("budgetAmount", ValidateBudgetAmount(model.BudgetAmount));
+            returnValue.AddMessageRangeToKey("categoryId", ValidateCategoryId(model.CategoryId));
 
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
 
@@ -45,17 +41,13 @@ namespace Persistence.ModelValidations.Transaction
         {
             await Task.Yield();
 
-            var messages = new List<string>();
-
-            messages.AddRange(ValidateName(model.Name));
-            messages.AddRange(ValidateNote(model.Note));
-            messages.AddRange(ValidateBudgetAmount(model.BudgetAmount));
-            messages.AddRange(ValidateCategoryId(model.CategoryId));
-
             var returnValue = new ReturnValue();
-            returnValue.Success = messages.Count == 0;
-            returnValue.Messages.AddRange(messages);
+            returnValue.AddMessageRangeToKey("name", ValidateName(model.Name));
+            returnValue.AddMessageRangeToKey("note", ValidateNote(model.Note));
+            returnValue.AddMessageRangeToKey("budgetAmount", ValidateBudgetAmount(model.BudgetAmount));
+            returnValue.AddMessageRangeToKey("categoryId", ValidateCategoryId(model.CategoryId));
 
+            returnValue.Success = returnValue.Messages.Count == 0;
             return returnValue;
         }
 
