@@ -41,6 +41,18 @@ public class CategoryItemRepository : BaseRepository<CategoryItem, CategoryItemR
         row.ModifiedOn = DateTime.UtcNow;
         return await InsertRowBaseAsync(CategoryItemSQL.InsertRowSQL, _params.FullCategoryItemParamsNoId(row));
     }
+    public ReturnValue<int> InsertRowAndGetId(CategoryItem row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return InsertRowAndGetIdBase(CategoryItemSQL.InsertRowAndGetIdSQL, _params.FullCategoryItemParamsNoId(row));
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(CategoryItem row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return await InsertRowAndGetIdBaseAsync(CategoryItemSQL.InsertRowAndGetIdSQL, _params.FullCategoryItemParamsNoId(row));
+    }
     //*****************************************************************************************************
     // UpdateRow
     //*****************************************************************************************************

@@ -46,6 +46,18 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
         row.ModifiedOn = DateTime.UtcNow;
         return await InsertRowBaseAsync(AccountRoleSQL.InsertRowSQL, _params.FullAccountRoleParamsNoId(row));
     }
+    public ReturnValue<int> InsertRowAndGetId(AccountRole row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return InsertRowAndGetIdBase(AccountRoleSQL.InsertRowAndGetIdSQL, _params.FullAccountRoleParamsNoId(row));
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(AccountRole row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return await InsertRowAndGetIdBaseAsync(AccountRoleSQL.InsertRowAndGetIdSQL, _params.FullAccountRoleParamsNoId(row));
+    }
 
     //*****************************************************************************************************
     // UpdateRow

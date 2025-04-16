@@ -82,6 +82,9 @@ public interface IRepository<T> where T : IBaseModel
     /// </returns>
     Task<ReturnValue> InsertRowAsync(T row);
 
+    ReturnValue<int> InsertRowAndGetId(T row);
+    Task<ReturnValue<int>> InsertRowAndGetIdAsync(T row);
+
     /// <summary>
     /// Deletes a row from the database. It is up to the implementing class
     /// to determine how to find the row to delete.

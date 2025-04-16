@@ -1,5 +1,7 @@
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Identity;
 
 namespace Persistence.ModelValidations.Identity;
@@ -9,6 +11,11 @@ namespace Persistence.ModelValidations.Identity;
 /// </summary>
 public class AccountValidation : IModelValidation<Account>
 {
+    private readonly ILogger<AccountValidation> _logger;
+    public AccountValidation(ILogger<AccountValidation> logger)
+    {
+        _logger = logger;
+    }
     /// <summary>
     /// Validates the Account model.
     /// This is used to validate the Account object before it is saved to the database.
@@ -19,7 +26,7 @@ public class AccountValidation : IModelValidation<Account>
     {
         var returnValue = new ReturnValue();
 
-        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.Username));
+        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.UserName));
         
         returnValue.AddMessageRangeToKey("password", ValidatePassword(model.Password));
     
@@ -42,7 +49,7 @@ public class AccountValidation : IModelValidation<Account>
 
         var returnValue = new ReturnValue();
 
-        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.Username));
+        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.UserName));
 
         returnValue.AddMessageRangeToKey("password", ValidatePassword(model.Password));
 
@@ -57,17 +64,17 @@ public class AccountValidation : IModelValidation<Account>
         var messages = new List<string>();
         if (string.IsNullOrWhiteSpace(username))
         {
-            messages.Add("Username cannot be empty.");
+            messages.Add("UserName cannot be empty.");
         }
         else if (username.Length < 3 || username.Length > 20)
         {
-            messages.Add("Username must be between 3 and 20 characters long.");
+            messages.Add("UserName must be between 3 and 20 characters long.");
         }
         // this might be done here or wait for an insert and let the 
         // database say there is a problem
         // else if (UsernameNotUnique(username))
         // {
-        //     messages.Add("Username already exists.");
+        //     messages.Add("UserName already exists.");
         // }
 
         return messages;

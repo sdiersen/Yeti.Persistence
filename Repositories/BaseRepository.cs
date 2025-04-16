@@ -196,6 +196,38 @@ public abstract class BaseRepository<T1, T2>
         }
         return returnValue;
     }
+    protected ReturnValue<int> InsertRowAndGetIdBase(string sql, DynamicParameters parameters)
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            int id = Connection.ExecuteScalar<int>(sql, parameters, Transaction);
+            returnValue.Success = true;
+            returnValue.Data = id;
+            returnValue.AddMessage("database", $"Insert row into {TableName} returned successfully. Id of inserted row: {id}");
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    protected async Task<ReturnValue<int>> InsertRowAndGetIdBaseAsync(string sql, DynamicParameters parameters)
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            int id = await Connection.ExecuteScalarAsync<int>(sql, parameters, Transaction);
+            returnValue.Success = true;
+            returnValue.Data = id;
+            returnValue.AddMessage("database", $"Insert row into {TableName} returned successfully. Id of inserted row: {id}");
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
     protected ReturnValue UpdateRowBase(string sql, DynamicParameters parameters)
     {
         var returnValue = new ReturnValue();

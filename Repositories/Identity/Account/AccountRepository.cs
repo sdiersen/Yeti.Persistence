@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Identity;
+using Microsoft.Identity.Client;
 
 namespace Persistence.Repositories.Identity;
 public class AccountRepository : BaseRepository<Account, AccountRepository>, IRepository<Account>
@@ -27,7 +28,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
         var returnValue = new ReturnValue<Account>();
         try
         {
-            var parameters = _params.UsernameAndPasswordParam(row.Username, row.Password);
+            var parameters = _params.UsernameAndPasswordParam(row.UserName, row.Password);
             var sql = AccountSQL.GetAccountByUsernameAndPassword;
             var account = Connection.QuerySingleOrDefault<Account>(sql, parameters, Transaction);
             if (account != null)
@@ -51,7 +52,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
         var returnValue = new ReturnValue<Account>();
         try
         {
-            var parameters = _params.UsernameAndPasswordParam(row.Username, row.Password);
+            var parameters = _params.UsernameAndPasswordParam(row.UserName, row.Password);
             var sql = AccountSQL.GetAccountByUsernameAndPassword;
             var account = await Connection.QuerySingleOrDefaultAsync<Account>(sql, parameters, Transaction);
             if (account != null)
@@ -125,13 +126,65 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
         }
         return returnValue;
     }
+    public ReturnValue<int> InsertRowAndGetId(Account row)
+    {
+        row = SetCreationValues(row);
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var parameters = _params.AccountParamsNoId(row);
+            var sql = AccountSQL.InsertRowAndGetIdSQL;
+            var result = Connection.ExecuteScalar<int>(sql, parameters, Transaction);
+            if (result > 0)
+            {
+                returnValue.Success = true;
+                returnValue.AddMessage("database", "Account created successfully.");
+                returnValue.Data = result;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "Failed to create account.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue = AccountErrorsAndMessages.AccountModifyExceptions(ex, returnValue);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(Account row)
+    {
+        row = SetCreationValues(row);
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var parameters = _params.AccountParamsNoId(row);
+            var sql = AccountSQL.InsertRowAndGetIdSQL;
+            var result = await Connection.ExecuteScalarAsync<int>(sql, parameters, Transaction);
+            if (result > 0)
+            {
+                returnValue.Success = true;
+                returnValue.AddMessage("database", "Account created successfully.");
+                returnValue.Data = result;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "Failed to create account.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue = AccountErrorsAndMessages.AccountModifyExceptions(ex, returnValue);
+        }
+        return returnValue;
+    }
 
     //*****************************************************************************************************
     // UpdateRow
     //*****************************************************************************************************
     public ReturnValue UpdateRow(Account row)
     {
-        var resultValue = GetRowId(row.Username, row.Password);
+        var resultValue = GetRowId(row.UserName, row.Password);
         if (!resultValue.Success)
         {
             var returnValue = new ReturnValue();
@@ -142,7 +195,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     }
     public async Task<ReturnValue> UpdateRowAsync(Account row)
     {
-        var resultValue = await GetRowIdAsync(row.Username, row.Password);
+        var resultValue = await GetRowIdAsync(row.UserName, row.Password);
         if (!resultValue.Success)
         {
             var returnValue = new ReturnValue();
@@ -207,7 +260,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     //*****************************************************************************************************
     public ReturnValue DeleteRow(Account row)
     {
-        var resultValue = GetRowId(row.Username, row.Password);
+        var resultValue = GetRowId(row.UserName, row.Password);
         if (!resultValue.Success)
         {
             var rv = new ReturnValue();
@@ -218,7 +271,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     }
     public async Task<ReturnValue> DeleteRowAsync(Account row)
     {
-        var resultValue = await GetRowIdAsync(row.Username, row.Password);
+        var resultValue = await GetRowIdAsync(row.UserName, row.Password);
         if (!resultValue.Success)
         {
             var rv = new ReturnValue();

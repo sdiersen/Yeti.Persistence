@@ -5,6 +5,7 @@ using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Identity;
@@ -151,6 +152,54 @@ public class RoleRepository : BaseRepository<Role, RoleRepository>, IRepository<
             var result = await Connection.ExecuteAsync(RoleSQL.InsertRoleSQL, _params.FullRoleParamsNoId(row), Transaction);
             if (result > 0)
             {
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", $"Failed to insert role {row.RoleName}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue = RoleErrorsAndMessages.RoleModifyExceptions(ex, returnValue);
+        }
+        return returnValue;
+    }
+    public ReturnValue<int> InsertRowAndGetId(Role row)
+    {
+        var returnValue = new ReturnValue<int>();
+        row.CreatedOn = DateTime.Now;
+        row.ModifiedOn = DateTime.Now;
+        try
+        {
+            var result = Connection.ExecuteScalar<int>(RoleSQL.InsertRoleAndGetIdSQL, _params.FullRoleParamsNoId(row), Transaction);
+            if (result > 0)
+            {
+                returnValue.Data = result;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", $"Failed to insert role {row.RoleName}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue = RoleErrorsAndMessages.RoleModifyExceptions(ex, returnValue);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(Role row)
+    {
+        var returnValue = new ReturnValue<int>();
+        row.CreatedOn = DateTime.Now;
+        row.ModifiedOn = DateTime.Now;
+        try
+        {
+            var result = await Connection.ExecuteScalarAsync<int>(RoleSQL.InsertRoleAndGetIdSQL, _params.FullRoleParamsNoId(row), Transaction);
+            if (result > 0)
+            {
+                returnValue.Data = result;
                 returnValue.Success = true;
             }
             else

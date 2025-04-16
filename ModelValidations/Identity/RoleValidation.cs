@@ -1,5 +1,7 @@
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Identity;
 
 namespace Persistence.ModelValidations.Identity
@@ -9,6 +11,12 @@ namespace Persistence.ModelValidations.Identity
     /// </summary>
     public class RoleValidation : IModelValidation<Role>
     {
+        private readonly ILogger<RoleValidation> _logger;
+
+        public RoleValidation(ILogger<RoleValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the Role model.
         /// </summary>

@@ -1,5 +1,7 @@
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Identity;
 
 namespace Persistence.ModelValidations.Identity
@@ -9,6 +11,12 @@ namespace Persistence.ModelValidations.Identity
     /// </summary>
     public class UserDataValidation : IModelValidation<UserData>
     {
+        private readonly ILogger<UserDataValidation> _logger;
+
+        public UserDataValidation(ILogger<UserDataValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the UserData model.
         /// </summary>

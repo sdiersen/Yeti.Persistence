@@ -3,7 +3,7 @@
 namespace Persistence.Repositories.Identity;
 internal class UserDataSQL
 {
-    internal const string InsertUserDataSQL = $@"
+    internal const string InsertRowSQL = $@"
                             INSERT INTO {DbTableNames.USER_DATA_TABLE} 
                             (
                                 {DbUserDataTable.FIRST_NAME}, 
@@ -22,6 +22,26 @@ internal class UserDataSQL
                             )
                         ;"
     ;
+    internal const string InsertRowAndGetIdSQL = $@"
+                            INSERT INTO {DbTableNames.USER_DATA_TABLE} 
+                            (
+                                {DbUserDataTable.FIRST_NAME}, 
+                                {DbUserDataTable.LAST_NAME}, 
+                                {DbUserDataTable.DATE_OF_BIRTH},
+                                {DbCommonColumns.MODIFIED_ON},
+                                {DbCommonColumns.CREATED_ON}
+                            ) 
+                            OUTPUT INSERTED.{DbCommonColumns.ID}
+                            VALUES 
+                            (
+                                @FirstName, 
+                                @LastMame, 
+                                @DateOfBirth,
+                                @ModifiedOn,
+                                @CreatedOn
+                            )
+                        ;"
+        ;
 
     internal const string UpdateUserDataSQL = $@"
                             UPDATE {DbTableNames.USER_DATA_TABLE} 

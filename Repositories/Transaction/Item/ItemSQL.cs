@@ -28,6 +28,31 @@ internal class ItemSQL
                                 @IsExpense
                             );
                         ";
+    internal const string InsertRowAndGetIdSQL = $@"
+                            INSERT INTO {DbTableNames.ITEM_TABLE} 
+                            (
+                                {DbCommonColumns.CREATED_ON},
+                                {DbCommonColumns.MODIFIED_ON},
+                                {DbItemTable.NAME},
+                                {DbItemTable.NOTE},
+                                {DbItemTable.BUDGET_AMOUNT},
+                                {DbItemTable.CURRENT_AMOUNT},
+                                {DbItemTable.CATEGORY_ID},
+                                {DbItemTable.IS_EXPENSE}
+                            )
+                            OUTPUT INSERTED.{DbCommonColumns.ID}
+                            VALUES
+                            (
+                                @CreatedOn,
+                                @ModifiedOn,
+                                @Name,
+                                @Note,
+                                @BudgetAmount,
+                                @CurrentAmount,
+                                @CategoryId,
+                                @IsExpense
+                            );
+                        ";
     internal const string UpdateRowSQL = $@"
                             UPDATE {DbTableNames.ITEM_TABLE}
                             SET

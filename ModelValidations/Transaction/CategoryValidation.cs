@@ -1,5 +1,6 @@
 using Persistence.Models.Transaction;
 using ErrorHandling;
+using Microsoft.Extensions.Logging;
 
 
 namespace Persistence.ModelValidations.Transaction
@@ -9,6 +10,12 @@ namespace Persistence.ModelValidations.Transaction
     /// </summary>
     public class CategoryValidation : IModelValidation<Category>
     {
+        private readonly ILogger<CategoryValidation> _logger;
+
+        public CategoryValidation(ILogger<CategoryValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the Category model.
         /// </summary>

@@ -1,5 +1,7 @@
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Identity;
 
 namespace Persistence.ModelValidations.Identity
@@ -9,6 +11,12 @@ namespace Persistence.ModelValidations.Identity
     /// </summary>
     public class AccountRoleValidation : IModelValidation<AccountRole>
     {
+        private readonly ILogger<AccountRoleValidation> _logger;
+
+        public AccountRoleValidation(ILogger<AccountRoleValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the AccountRole model. Only tests that the Id's provided are in a valid format.
         /// Does not test the Id for the AccountRole object itself.

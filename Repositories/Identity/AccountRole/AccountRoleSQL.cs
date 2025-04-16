@@ -23,7 +23,24 @@ internal class AccountRoleSQL
                                     )
                                 ;"
                         ;
-
+    internal const string InsertRowAndGetIdSQL = $@"
+                                    INSERT INTO {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    (
+                                        {DbAccountRoleTable.ACCOUNT_ID}, 
+                                        {DbAccountRoleTable.ROLE_ID}, 
+                                        {DbCommonColumns.CREATED_ON},
+                                        {DbCommonColumns.MODIFIED_ON} 
+                                    )
+                                    OUTPUT INSERTED.{DbCommonColumns.ID}
+                                    VALUES 
+                                    (
+                                        @AccountId, 
+                                        @RoleId, 
+                                        @CreatedOn, 
+                                        @ModifiedOn
+                                    )
+                                ;"
+                        ;
     internal const string UpdateRowSQL = $@"
                                     UPDATE {DbTableNames.ACCOUNT_ROLE_TABLE} 
                                     SET 

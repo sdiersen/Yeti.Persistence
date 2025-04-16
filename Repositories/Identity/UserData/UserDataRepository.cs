@@ -33,13 +33,25 @@ public class UserDataRepository : BaseRepository<UserData, UserDataRepository>, 
     {
         row.CreatedOn = DateTime.UtcNow;
         row.ModifiedOn = DateTime.UtcNow;
-        return InsertRowBase(UserDataSQL.InsertUserDataSQL, _params.FullUserDataParamsNoId(row));
+        return InsertRowBase(UserDataSQL.InsertRowSQL, _params.FullUserDataParamsNoId(row));
     }
     public async Task<ReturnValue> InsertRowAsync(UserData row)
     {
         row.CreatedOn = DateTime.UtcNow;
         row.ModifiedOn = DateTime.UtcNow;
-        return await InsertRowBaseAsync(UserDataSQL.InsertUserDataSQL, _params.FullUserDataParamsNoId(row));
+        return await InsertRowBaseAsync(UserDataSQL.InsertRowSQL, _params.FullUserDataParamsNoId(row));
+    }
+    public ReturnValue<int> InsertRowAndGetId(UserData row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return InsertRowAndGetIdBase(UserDataSQL.InsertRowSQL, _params.FullUserDataParamsNoId(row));
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(UserData row)
+    {
+        row.CreatedOn = DateTime.UtcNow;
+        row.ModifiedOn = DateTime.UtcNow;
+        return await InsertRowAndGetIdBaseAsync(UserDataSQL.InsertRowSQL, _params.FullUserDataParamsNoId(row));
     }
     //*****************************************************************************************************
     // UpdateRow

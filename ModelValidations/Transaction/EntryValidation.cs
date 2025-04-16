@@ -2,6 +2,8 @@
 
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Transaction;
 
 namespace Persistence.ModelValidations.Transaction
@@ -11,6 +13,12 @@ namespace Persistence.ModelValidations.Transaction
     /// </summary>
     public class EntryValidation : IModelValidation<Entry>
     {
+        private readonly ILogger<EntryValidation> _logger;
+
+        public EntryValidation(ILogger<EntryValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the Entry model.
         /// </summary>

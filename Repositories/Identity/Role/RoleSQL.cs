@@ -21,6 +21,22 @@ internal class RoleSQL
                             )
                         ;"
                 ;
+    internal const string InsertRoleAndGetIdSQL = $@"
+                            INSERT INTO {DbTableNames.ROLE_TABLE} 
+                            (
+                                {DbRoleTable.ROLE_NAME}, 
+                                {DbRoleTable.ROLE_NUMBER}, 
+                                {DbRoleTable.DESCRIPTION}
+                            )
+                            OUTPUT INSERTED.{DbCommonColumns.ID}
+                            VALUES 
+                            (
+                                @RoleName, 
+                                @RoleNumber, 
+                                @Description
+                            )
+                        ;"
+                ;
 
     internal const string UpdateRoleSQL = $@"
                             UPDATE {DbTableNames.ROLE_TABLE} 

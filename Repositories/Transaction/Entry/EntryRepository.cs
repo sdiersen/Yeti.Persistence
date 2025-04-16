@@ -10,7 +10,7 @@ using Persistence.Models.Transaction;
 namespace Persistence.Repositories.Transaction;
 public class EntryRepository : BaseRepository<Entry, EntryRepository>, IRepository<Entry>
 {
-    private EntryParams _params;
+    private readonly EntryParams _params;
     public EntryRepository(ILogger<EntryRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.ENTRY_TABLE;
@@ -41,6 +41,18 @@ public class EntryRepository : BaseRepository<Entry, EntryRepository>, IReposito
         row.ModifiedOn = DateTime.Now;
         row.CreatedOn = DateTime.Now;
         return await InsertRowBaseAsync(EntrySQL.InsertRowSQL, _params.FullEntryParamsNoId(row));
+    }
+    public ReturnValue<int> InsertRowAndGetId(Entry row)
+    {
+        row.ModifiedOn = DateTime.Now;
+        row.CreatedOn = DateTime.Now;
+        return InsertRowAndGetIdBase(EntrySQL.InsertRowAndGetIdSQL, _params.FullEntryParamsNoId(row));
+    }
+    public async Task<ReturnValue<int>> InsertRowAndGetIdAsync(Entry row)
+    {
+        row.ModifiedOn = DateTime.Now;
+        row.CreatedOn = DateTime.Now;
+        return await InsertRowAndGetIdBaseAsync(EntrySQL.InsertRowAndGetIdSQL, _params.FullEntryParamsNoId(row));
     }
     //*****************************************************************************************************
     // UpdateRow

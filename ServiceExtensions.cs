@@ -5,6 +5,9 @@ using Persistence.ModelValidations;
 using Persistence.ModelValidations.Transaction;
 using Persistence.ModelValidations.Identity;
 using Persistence.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Persistence.Services;
 
 namespace Persistence;
 
@@ -19,6 +22,12 @@ public static class ServiceExtensions
     /// <param name="services">IServiceCollection object</param>
     public static void CustomModelValidationServices(this IServiceCollection services)
     {
+        // Check if the services are already registered
+        if (services.Any(sd => sd.ServiceType == typeof(IModelValidation<Category>)))
+        {
+            return;
+        }
+
         //Entry Services
         services.AddScoped<IModelValidation<Category>, CategoryValidation>();
         services.AddScoped<IModelValidation<Item>, ItemValidation>();
@@ -33,6 +42,46 @@ public static class ServiceExtensions
 
         //Repository Factory
         services.AddSingleton<RepositoryFactory>();
+    }
+    public static void CustomPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Make sure ILogger is registered
+        if (!services.Any(sd => sd.ServiceType == typeof(ILoggerFactory)))
+        {
+            throw new InvalidOperationException("ILogger must be registered before registering CustomPersistenceServices.");
+        }
+
+        //Add Model Validations
+        services.CustomModelValidationServices();
+
+        //Add Factories
+        services.AddSingleton<RepositoryFactory>();
+        services.AddSingleton<ModelValidationFactory>();
+
+        // Set default connection string for UnitOfWork
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        }
+        UnitOfWork.SetDefaultConnectionString(connectionString);
+        UnitOfWorkAsync.SetDefaultConnectionString(connectionString);
+
+        // Add UnitOfWork
+        services.AddTransient<UnitOfWork>(provider =>
+        {
+            return UnitOfWork.Create();
+        });
+
+        // Add UnitOfWorkAsync
+        services.AddTransient(async provider =>
+        {
+            return await UnitOfWorkAsync.CreateAsync();
+        });
+
+        //Add Database Services
+
+
     }
 }
 

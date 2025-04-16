@@ -1,5 +1,7 @@
 using ErrorHandling;
 
+using Microsoft.Extensions.Logging;
+
 using Persistence.Models.Transaction;
 
 namespace Persistence.ModelValidations.Transaction
@@ -9,6 +11,12 @@ namespace Persistence.ModelValidations.Transaction
     /// </summary>
     public class CategoryItemValidation : IModelValidation<CategoryItem>
     {
+        private readonly ILogger<CategoryItemValidation> _logger;
+
+        public CategoryItemValidation(ILogger<CategoryItemValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the CategoryItem model. Only tests that the Id's provided are in a valid format.
         /// Does not test the Id for the CategoryItem object itself.

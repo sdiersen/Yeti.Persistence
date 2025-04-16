@@ -1,6 +1,7 @@
 
 using Persistence.Models.Transaction;
 using ErrorHandling;
+using Microsoft.Extensions.Logging;
 
 namespace Persistence.ModelValidations.Transaction
 {
@@ -9,6 +10,12 @@ namespace Persistence.ModelValidations.Transaction
     /// </summary>
     public class ItemValidation : IModelValidation<Item>
     {
+        private readonly ILogger<ItemValidation> _logger;
+
+        public ItemValidation(ILogger<ItemValidation> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// Validates the Item model.
         /// </summary>

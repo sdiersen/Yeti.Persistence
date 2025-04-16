@@ -19,6 +19,23 @@ internal class CategorySQL
                 @ModifiedOn
             );
         ";
+    internal const string InsertRowAndGetIdSQL = @$"
+            INSERT INTO {DbTableNames.CATEGORY_TABLE}
+            (
+                {DbCategoryTable.NAME},
+                {DbCategoryTable.DESCRIPTION},
+                {DbCommonColumns.CREATED_ON},
+                {DbCommonColumns.MODIFIED_ON}    
+            )
+            OUTPUT INSERTED.{DbCommonColumns.ID}
+            VALUES
+            (
+                @Name,
+                @Description,
+                @CreatedOn,
+                @ModifiedOn
+            );
+        ";
 
     internal const string UpdateRowSQL = @$"
             UPDATE {DbTableNames.CATEGORY_TABLE}
