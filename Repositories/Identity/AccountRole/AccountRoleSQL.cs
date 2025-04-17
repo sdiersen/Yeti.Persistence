@@ -51,4 +51,40 @@ internal class AccountRoleSQL
                                     WHERE {DbCommonColumns.ID} = @Id
                                 ;"
                         ;
+    internal const string GetIdFromRoleAndAccountIdSQL = $@"
+                                    SELECT {DbCommonColumns.ID}
+                                    FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ACCOUNT_ID} = @AccountId 
+                                    AND {DbAccountRoleTable.ROLE_ID} = @RoleId
+                                ;"
+                        ;
+    internal const string GetRolesForAccountIdSQL = $@"
+                                    SELECT {DbCommonColumns.ID}, {DbAccountRoleTable.ACCOUNT_ID}, {DbAccountRoleTable.ROLE_ID}, {DbCommonColumns.CREATED_ON}, {DbCommonColumns.MODIFIED_ON}
+                                    FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ACCOUNT_ID} = @AccountId
+                                ;"
+                        ;
+    internal const string GetRoleIdsForAccountIdSQL = $@"
+                                    SELECT {DbAccountRoleTable.ROLE_ID}
+                                    FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ACCOUNT_ID} = @AccountId
+                                ;"
+                        ;
+    internal const string GetAccountRolesForRoleIdSQL = $@"
+                                    SELECT {DbCommonColumns.ID}, {DbAccountRoleTable.ACCOUNT_ID}, {DbAccountRoleTable.ROLE_ID}, {DbCommonColumns.CREATED_ON}, {DbCommonColumns.MODIFIED_ON}
+                                    FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ROLE_ID} = @RoleId
+                                ;"
+                        ;
+    internal const string GetAccountIdsForRoleIdSQL = $@"
+                                    SELECT {DbAccountRoleTable.ACCOUNT_ID}
+                                    FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ROLE_ID} = @RoleId
+                                ;"
+                        ;
+    internal const string DeleteRolesForAccountIdSQL = $@"
+                                    DELETE FROM {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    WHERE {DbAccountRoleTable.ACCOUNT_ID} = @AccountId
+                                ;"
+                        ;
 }

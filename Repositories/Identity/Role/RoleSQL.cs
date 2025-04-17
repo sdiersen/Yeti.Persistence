@@ -54,4 +54,14 @@ internal class RoleSQL
                             WHERE {DbRoleTable.ROLE_NAME} = @RoleName
                         ;"
                 ;
+    
+    internal const string AllRolesExistSQL = $@"
+                            SELECT CASE
+                                WHEN COUNT(*) = @RoleCount THEN 1 
+                                ELSE 0 
+                            END AS AllRolesExist   
+                            FROM {DbTableNames.ROLE_TABLE} 
+                            WHERE {DbCommonColumns.ID} IN @RoleIds
+                        ;"
+                ;
 }

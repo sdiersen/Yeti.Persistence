@@ -1,7 +1,5 @@
 using ErrorHandling;
 
-using Microsoft.Data.SqlClient;
-
 namespace Persistence;
 
 /// <summary>

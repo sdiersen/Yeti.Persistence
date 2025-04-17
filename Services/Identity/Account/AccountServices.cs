@@ -5,23 +5,81 @@ using Microsoft.Extensions.Logging;
 using Persistence.DTOs.Identity;
 using Persistence.Models.Identity;
 using Persistence.ModelValidations;
+using Persistence.ModelValidations.Identity;
 using Persistence.Repositories;
 
 namespace Persistence.Services.Identity;
-public class AccountServices
+public class AccountServices : IAccountServices
 {
     private readonly ILogger<AccountServices> _logger;
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ModelValidationFactory _modelValidationFactory;
+    private readonly AccountValidation _accountValidation;
 
     public AccountServices(ILogger<AccountServices> logger, RepositoryFactory repositoryFactory, ModelValidationFactory modelValidationFactory)
     {
         _logger = logger;
         _repositoryFactory = repositoryFactory;
         _modelValidationFactory = modelValidationFactory;
+        _accountValidation = _modelValidationFactory.CreateAccountValidation();
     }
 
     public ReturnValue CreateAccount(RegisterDTO registerDTO)
+    {
+        //validate the DTO
+        var account = new Account()
+        {
+            UserName = registerDTO.UserName,
+            Password = registerDTO.Password,
+            LastLogin = DateTime.UtcNow
+        };
+        var validationResult = _accountValidation.ValidateModel(account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        //Create the account and the role for the account in a transaction
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var returnValue = new ReturnValue();
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            try
+            {
+                var accountCreateValue = accountRepository.InsertRowAndGetId(account);
+                if (!accountCreateValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(accountCreateValue);
+                    return returnValue;
+                }
+                int id = accountCreateValue.Data;
+                var accountRoleCreateValue = accountRoleRepository.InsertRow(new AccountRole()
+                {
+                    AccountId = id,
+                    RoleId = 2 // 2 is the default for new accounts, which is the User role
+                });
+                if (!accountRoleCreateValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    return accountRoleCreateValue;
+                }
+                unitOfWork.Commit();
+                returnValue.Consume(accountCreateValue);
+                returnValue.Consume(accountRoleCreateValue);
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                returnValue.AddError("CreateAccount", "An error occurred while creating the account.");
+                returnValue.AddError("CreateAccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> CreateAccountAsync(RegisterDTO registerDTO)
     {
         //validate the DTO
         var validation = _modelValidationFactory.CreateAccountValidation();
@@ -37,33 +95,33 @@ public class AccountServices
             return validationResult;
         }
         //Create the account and the role for the account in a transaction
-        using (var unitOfWork = UnitOfWork.Create(true))
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
         {
             var returnValue = new ReturnValue();
             var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
             var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
             try
-            {   
-                var accountCreateValue = accountRepository.InsertRowAndGetId(account);
+            {
+                var accountCreateValue = await accountRepository.InsertRowAndGetIdAsync(account);
                 if (!accountCreateValue.Success)
                 {
-                    unitOfWork.Rollback();
+                    await unitOfWork.RollbackAsync();
                     returnValue.AddErrorRange(accountCreateValue.Errors);
                     returnValue.AddMessageRange(accountCreateValue.Messages);
                     return returnValue;
                 }
                 int id = accountCreateValue.Data;
-                var accountRoleCreateValue = accountRoleRepository.InsertRow(new AccountRole()
+                var accountRoleCreateValue = await accountRoleRepository.InsertRowAsync(new AccountRole()
                 {
                     AccountId = id,
                     RoleId = 2 // 2 is the default for new accounts, which is the User role
                 });
                 if (!accountRoleCreateValue.Success)
                 {
-                    unitOfWork.Rollback();
+                    await unitOfWork.RollbackAsync();
                     return accountRoleCreateValue;
                 }
-                unitOfWork.Commit();
+                await unitOfWork.CommitAsync();
                 returnValue.AddMessageRange(accountCreateValue.Messages);
                 returnValue.AddMessageRange(accountRoleCreateValue.Messages);
                 returnValue.AddErrorRange(accountCreateValue.Errors);
@@ -73,9 +131,328 @@ public class AccountServices
             }
             catch (Exception ex)
             {
-                unitOfWork.Rollback();
+                await unitOfWork.RollbackAsync();
                 returnValue.AddError("CreateAccount", "An error occurred while creating the account.");
                 returnValue.AddError("CreateAccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+
+    public ReturnValue Login(LoginDTO loginDTO)
+    {
+        //validate the DTO
+        var account = new Account()
+        {
+            UserName = loginDTO.UserName,
+            Password = loginDTO.Password,
+            LastLogin = DateTime.UtcNow
+        };
+        var validationResult = _accountValidation.ValidateModel(account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        //Login the account
+        using (var unitOfWork = new UnitOfWork(true))
+        {
+            var returnValue = new ReturnValue();
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            try
+            {
+                var accountLoginValue = accountRepository.GetRow(account);
+                if (!accountLoginValue.Success)
+                {
+                    returnValue.Consume(accountLoginValue);
+                    return returnValue;
+                }
+                //Update the last login time
+                account.LastLogin = DateTime.UtcNow;
+                var accountUpdateValue = accountRepository.UpdateRow(account);
+                if (!accountUpdateValue.Success)
+                {
+                    returnValue.Consume(accountUpdateValue);
+                    return returnValue;
+                }
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("Login", "An error occurred while logging in.");
+                returnValue.AddError("Login", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> LoginAsync(LoginDTO loginDTO)
+    {
+        //validate the DTO
+        var account = new Account()
+        {
+            UserName = loginDTO.UserName,
+            Password = loginDTO.Password,
+            LastLogin = DateTime.UtcNow
+        };
+        var validationResult = _accountValidation.ValidateModel(account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        //Login the account
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+        {
+            var returnValue = new ReturnValue();
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            try
+            {
+                var accountLoginValue = await accountRepository.GetRowAsync(account);
+                if (!accountLoginValue.Success)
+                {
+                    returnValue.Consume(accountLoginValue);
+                    return returnValue;
+                }
+                //Update the last login time
+                account.LastLogin = DateTime.UtcNow;
+                var accountUpdateValue = await accountRepository.UpdateRowAsync(account);
+                if (!accountUpdateValue.Success)
+                {
+                    returnValue.Consume(accountUpdateValue);
+                    return returnValue;
+                }
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("Login", "An error occurred while logging in.");
+                returnValue.AddError("Login", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+
+    public ReturnValue UpdateAccount(UpdateAccountDTO updateAccount)
+    {
+        var returnValue = new ReturnValue();
+
+        // Validate the account
+        var validationResult = _accountValidation.ValidateModel(updateAccount.Account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        returnValue.Consume(validationResult);
+
+        // Begin a transaction
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var roleRepository = _repositoryFactory.CreateRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+
+            try
+            {
+                // Step 1: Validate roles
+                var roleValidationResult = roleRepository.CheckRolesExist(updateAccount.Roles);
+                if (!roleValidationResult.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(roleValidationResult);
+                    return returnValue;
+                }
+                returnValue.Consume(roleValidationResult);
+
+                // Step 2: Update the Account table
+                var accountUpdateResult = accountRepository.UpdateRow(updateAccount.Account);
+                if (!accountUpdateResult.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(accountUpdateResult);
+                    return returnValue;
+                }
+                returnValue.Consume(accountUpdateResult);
+
+                // Step 3: Update the AccountRoles table
+                var updateAccountRoleResults = accountRoleRepository.UpdateRolesForAccountId(updateAccount.Account.Id, updateAccount.Roles);
+                if (!updateAccountRoleResults.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(updateAccountRoleResults);
+                    return returnValue;
+                }
+                returnValue.Consume(updateAccountRoleResults);
+
+                // if it get this far the, we know this is a success
+                returnValue.Success = true;
+
+                // Commit the transaction
+                unitOfWork.Commit();
+                returnValue.Success = true;
+                returnValue.AddMessage("updateaccount", "Account and roles updated successfully.");
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                returnValue.AddError("updateaccount", "An error occurred while updating the account.");
+                returnValue.AddError("updateaccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> UpdateAccountAsync(UpdateAccountDTO updateAccount)
+    {
+        var returnValue = new ReturnValue();
+
+        // Validate the account
+        var validationResult = _accountValidation.ValidateModel(updateAccount.Account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        returnValue.Consume(validationResult);
+
+        // Begin a transaction
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var roleRepository = _repositoryFactory.CreateRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+
+            try
+            {
+                // Step 1: Validate roles
+                var roleValidationResult = await roleRepository.CheckRolesExistAsync(updateAccount.Roles);
+                if (!roleValidationResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(roleValidationResult);
+                    return returnValue;
+                }
+                returnValue.Consume(roleValidationResult);
+
+                // Step 2: Update the Account table
+                var accountUpdateResult = await accountRepository.UpdateRowAsync(updateAccount.Account);
+                if (!accountUpdateResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(accountUpdateResult);
+                    return returnValue;
+                }
+                returnValue.Consume(accountUpdateResult);
+
+                // Step 3: Update the AccountRoles table
+                var updateAccountRoleResults = await accountRoleRepository.UpdateRolesForAccountIdAsync(updateAccount.Account.Id, updateAccount.Roles);
+                if (!updateAccountRoleResults.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(updateAccountRoleResults);
+                    return returnValue;
+                }
+                returnValue.Consume(updateAccountRoleResults);
+
+                // if it get this far the, we know this is a success
+                returnValue.Success = true;
+
+                // Commit the transaction
+                await unitOfWork.CommitAsync();
+                returnValue.Success = true;
+                returnValue.AddMessage("updateaccount", "Account and roles updated successfully.");
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                await unitOfWork.RollbackAsync();
+                returnValue.AddError("updateaccount", "An error occurred while updating the account.");
+                returnValue.AddError("updateaccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+
+    public ReturnValue DeleteAccount(int id)
+    {
+        var returnValue = new ReturnValue();
+        // Begin a transaction
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            try
+            {
+                // Step 1: Delete the AccountRoles for the account
+                var deleteAccountRolesResult = accountRoleRepository.DeleteRolesForAccountId(id);
+                if (!deleteAccountRolesResult.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(deleteAccountRolesResult);
+                    return returnValue;
+                }
+                returnValue.Consume(deleteAccountRolesResult);
+                // Step 2: Delete the Account
+                var deleteAccountResult = accountRepository.DeleteRow(id);
+                if (!deleteAccountResult.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(deleteAccountResult);
+                    return returnValue;
+                }
+                returnValue.Consume(deleteAccountResult);
+                // Commit the transaction
+                unitOfWork.Commit();
+                returnValue.Success = true;
+                returnValue.AddMessage("deleteaccount", "Account deleted successfully.");
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                returnValue.AddError("deleteaccount", "An error occurred while deleting the account.");
+                returnValue.AddError("deleteaccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> DeleteAccountAsync(int id)
+    {
+        var returnValue = new ReturnValue();
+        // Begin a transaction
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            try
+            {
+                // Step 1: Delete the AccountRoles for the account
+                var deleteAccountRolesResult = await accountRoleRepository.DeleteRolesForAccountIdAsync(id);
+                if (!deleteAccountRolesResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(deleteAccountRolesResult);
+                    return returnValue;
+                }
+                returnValue.Consume(deleteAccountRolesResult);
+                // Step 2: Delete the Account
+                var deleteAccountResult = await accountRepository.DeleteRowAsync(id);
+                if (!deleteAccountResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(deleteAccountResult);
+                    return returnValue;
+                }
+                returnValue.Consume(deleteAccountResult);
+                // Commit the transaction
+                await unitOfWork.CommitAsync();
+                returnValue.Success = true;
+                returnValue.AddMessage("deleteaccount", "Account deleted successfully.");
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                await unitOfWork.RollbackAsync();
+                returnValue.AddError("deleteaccount", "An error occurred while deleting the account.");
+                returnValue.AddError("deleteaccount", ex.Message);
                 return returnValue;
             }
         }

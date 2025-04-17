@@ -383,4 +383,62 @@ public class RoleRepository : BaseRepository<Role, RoleRepository>, IRepository<
         row.Id = getRowResult.Data!.Id; // if Success = true then Data is not null, hence Data! is safe to use
         return await DeleteRowAsync(row.Id);
     }
+
+    //******************************************************************************************************
+    // Role specific methods
+    //******************************************************************************************************
+
+    //check a list of RoleNumbers to see if they exist in the database
+    public ReturnValue CheckRolesExist(List<int> roleIds)
+    {
+        var returnValue = new ReturnValue();
+        if (roleIds == null || roleIds.Count == 0)
+        {
+            returnValue.AddMessage("database", "No roles provided to check for existence.");
+            return returnValue;
+        }
+        try
+        {
+            var rolesExist = Connection.ExecuteScalar<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds }, Transaction);
+            if (rolesExist > 0)
+            {
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "Not all roles exist in the database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue> CheckRolesExistAsync(List<int> roleIds)
+    {
+        var returnValue = new ReturnValue();
+        if (roleIds == null || roleIds.Count == 0)
+        {
+            returnValue.AddMessage("database", "No roles provided to check for existence.");
+            return returnValue;
+        }
+        try
+        {
+            var rolesExist = await Connection.ExecuteScalarAsync<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds }, Transaction);
+            if (rolesExist > 0)
+            {
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "Not all roles exist in the database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
 }

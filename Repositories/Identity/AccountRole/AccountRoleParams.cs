@@ -22,4 +22,11 @@ internal class AccountRoleParams
 
         return parameters;
     }
+    internal DynamicParameters RoleAndAccountIdParams(AccountRole row)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("@AccountId", row.AccountId);
+        parameters.Add("@RoleId", row.RoleId);
+        return parameters;
+    }
 }
