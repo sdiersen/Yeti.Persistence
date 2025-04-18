@@ -141,7 +141,7 @@ public class AccountServices : IAccountServices
 
     public ReturnValue<AccountLoggedInDTO> Login(LoginDTO loginDTO)
     {
-        Account account = new Account()
+        var account = new Account()
         {
             UserName = loginDTO.UserName,
             Password = loginDTO.Password
@@ -194,7 +194,7 @@ public class AccountServices : IAccountServices
                 var accountLoggedInDTO = new AccountLoggedInDTO
                 {
                     Account = account,
-                    Roles = roleNamesValue.Data ?? []
+                    RoleNames = roleNamesValue.Data ?? []
                 };
                 returnValue.Data = accountLoggedInDTO;
                 returnValue.Success = true;
@@ -213,7 +213,7 @@ public class AccountServices : IAccountServices
     }
     public async Task<ReturnValue<AccountLoggedInDTO>> LoginAsync(LoginDTO loginDTO)
     {
-        Account account = new Account()
+        var account = new Account()
         {
             UserName = loginDTO.UserName,
             Password = loginDTO.Password
@@ -266,7 +266,7 @@ public class AccountServices : IAccountServices
                 var accountLoggedInDTO = new AccountLoggedInDTO
                 {
                     Account = account,
-                    Roles = roleNamesValue.Data ?? []
+                    RoleNames = roleNamesValue.Data ?? []
                 };
 
                 returnValue.Data = accountLoggedInDTO;
