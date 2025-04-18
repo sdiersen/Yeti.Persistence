@@ -1,7 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 
-using System.Threading.Tasks;
-
 namespace Persistence.Repositories
 {
     public class UnitOfWorkAsync : IAsyncDisposable

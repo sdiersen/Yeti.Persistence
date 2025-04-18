@@ -18,3 +18,9 @@ public class UpdateAccountDTO
     public Account Account { get; set; } = new Account();
     public List<int> Roles { get; set; } = [];
 }
+
+public class AccountLoggedInDTO
+{
+    public Account Account { get; set; } = new Account();
+    public List<string> Roles { get; set; } = [];
+}

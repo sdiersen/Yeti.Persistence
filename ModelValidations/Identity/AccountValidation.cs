@@ -97,7 +97,7 @@ public class AccountValidation : IModelValidation<Account>
     private static List<string> ValidateLastLogin(DateTime lastLogin)
     {
         var messages = new List<string>();
-        if (lastLogin > DateTime.Now)
+        if (lastLogin > DateTime.UtcNow)
         {
             messages.Add("Last login date cannot be in the future.");
         }

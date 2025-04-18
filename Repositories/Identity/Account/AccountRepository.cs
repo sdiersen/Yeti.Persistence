@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Identity;
-using Microsoft.Identity.Client;
 
 namespace Persistence.Repositories.Identity;
 public class AccountRepository : BaseRepository<Account, AccountRepository>, IRepository<Account>
@@ -207,6 +206,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     public ReturnValue UpdateRow(int id, Account row)
     {
         row.ModifiedOn = DateTime.UtcNow;
+        row.Id = id;
         var returnValue = new ReturnValue();
         try
         {
@@ -232,6 +232,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     public async Task<ReturnValue> UpdateRowAsync(int id, Account row)
     {
         row.ModifiedOn = DateTime.UtcNow;
+        row.Id = id;
         var returnValue = new ReturnValue();
         try
         {

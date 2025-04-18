@@ -139,88 +139,139 @@ public class AccountServices : IAccountServices
         }
     }
 
-    public ReturnValue Login(LoginDTO loginDTO)
+    public ReturnValue<AccountLoggedInDTO> Login(LoginDTO loginDTO)
     {
-        //validate the DTO
-        var account = new Account()
+        Account account = new Account()
         {
             UserName = loginDTO.UserName,
-            Password = loginDTO.Password,
-            LastLogin = DateTime.UtcNow
+            Password = loginDTO.Password
         };
-        var validationResult = _accountValidation.ValidateModel(account);
-        if (!validationResult.Success)
-        {
-            return validationResult;
-        }
         //Login the account
         using (var unitOfWork = new UnitOfWork(true))
         {
-            var returnValue = new ReturnValue();
+            var returnValue = new ReturnValue<AccountLoggedInDTO>();
             var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var roleRepository = _repositoryFactory.CreateRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
             try
             {
                 var accountLoginValue = accountRepository.GetRow(account);
+                returnValue.Consume(accountLoginValue);
                 if (!accountLoginValue.Success)
                 {
-                    returnValue.Consume(accountLoginValue);
+                    unitOfWork.Rollback();
                     return returnValue;
                 }
                 //Update the last login time
+                account = accountLoginValue.Data!;
                 account.LastLogin = DateTime.UtcNow;
+                
                 var accountUpdateValue = accountRepository.UpdateRow(account);
+                returnValue.Consume(accountUpdateValue);
                 if (!accountUpdateValue.Success)
                 {
-                    returnValue.Consume(accountUpdateValue);
+                    unitOfWork.Rollback();
                     return returnValue;
                 }
+
+                var accountRoleValue = accountRoleRepository.GetRoleIdsForAccountId(account.Id);
+                returnValue.Consume(accountRoleValue);
+                if (!accountRoleValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    return returnValue;
+                }
+
+                var roleIds = accountRoleValue.Data ?? [];
+                var roleNamesValue = roleRepository.GetRoleNamesForRoleIds(roleIds);
+                returnValue.Consume(roleNamesValue);
+                if (!roleNamesValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    return returnValue;
+                }
+
+                var accountLoggedInDTO = new AccountLoggedInDTO
+                {
+                    Account = account,
+                    Roles = roleNamesValue.Data ?? []
+                };
+                returnValue.Data = accountLoggedInDTO;
                 returnValue.Success = true;
+
+                unitOfWork.Commit();
                 return returnValue;
             }
             catch (Exception ex)
             {
+                unitOfWork.Rollback();
                 returnValue.AddError("Login", "An error occurred while logging in.");
                 returnValue.AddError("Login", ex.Message);
                 return returnValue;
             }
         }
     }
-    public async Task<ReturnValue> LoginAsync(LoginDTO loginDTO)
+    public async Task<ReturnValue<AccountLoggedInDTO>> LoginAsync(LoginDTO loginDTO)
     {
-        //validate the DTO
-        var account = new Account()
+        Account account = new Account()
         {
             UserName = loginDTO.UserName,
-            Password = loginDTO.Password,
-            LastLogin = DateTime.UtcNow
+            Password = loginDTO.Password
         };
-        var validationResult = _accountValidation.ValidateModel(account);
-        if (!validationResult.Success)
-        {
-            return validationResult;
-        }
         //Login the account
         await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
         {
-            var returnValue = new ReturnValue();
+            var returnValue = new ReturnValue<AccountLoggedInDTO>();
             var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+            var roleRepository = _repositoryFactory.CreateRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!);
+
             try
             {
                 var accountLoginValue = await accountRepository.GetRowAsync(account);
+                returnValue.Consume(accountLoginValue);
                 if (!accountLoginValue.Success)
                 {
-                    returnValue.Consume(accountLoginValue);
+                    await unitOfWork.RollbackAsync();
                     return returnValue;
                 }
+
                 //Update the last login time
                 account.LastLogin = DateTime.UtcNow;
                 var accountUpdateValue = await accountRepository.UpdateRowAsync(account);
+                returnValue.Consume(accountUpdateValue);
                 if (!accountUpdateValue.Success)
-                {
-                    returnValue.Consume(accountUpdateValue);
+                {                    
+                    await unitOfWork.RollbackAsync();
                     return returnValue;
                 }
+
+                var accountRoleValue = await accountRoleRepository.GetRoleIdsForAccountIdAsync(account.Id);
+                returnValue.Consume(accountRoleValue);
+                if (!accountRoleValue.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue;
+                }
+                var roleIds = accountRoleValue.Data ?? [];
+
+                var roleNamesValue = await roleRepository.GetRoleNamesForRoleIdsAsync(roleIds);
+                returnValue.Consume(roleNamesValue);
+                if (!roleNamesValue.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue;
+                }
+
+                var accountLoggedInDTO = new AccountLoggedInDTO
+                {
+                    Account = account,
+                    Roles = roleNamesValue.Data ?? []
+                };
+
+                returnValue.Data = accountLoggedInDTO;
                 returnValue.Success = true;
+                await unitOfWork.CommitAsync();
                 return returnValue;
             }
             catch (Exception ex)

@@ -5,7 +5,6 @@ using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Identity;
@@ -433,6 +432,62 @@ public class RoleRepository : BaseRepository<Role, RoleRepository>, IRepository<
             else
             {
                 returnValue.AddMessage("database", "Not all roles exist in the database.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+
+    //get role names for a list of role ids
+    public ReturnValue<List<string>> GetRoleNamesForRoleIds(List<int> roleIds)
+    {
+        var returnValue = new ReturnValue<List<string>>();
+        if (roleIds == null || roleIds.Count == 0)
+        {
+            returnValue.AddMessage("database", "No roles provided to get names for.");
+            return returnValue;
+        }
+        try
+        {
+            var roleNames = Connection.Query<string>(RoleSQL.GetRoleNamesForRoleIdsSQL, new { RoleIds = roleIds }, Transaction).ToList();
+            if (roleNames.Count > 0)
+            {
+                returnValue.Data = roleNames;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "No roles found for the provided ids.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<List<string>>> GetRoleNamesForRoleIdsAsync(List<int> roleIds)
+    {
+        var returnValue = new ReturnValue<List<string>>();
+        if (roleIds == null || roleIds.Count == 0)
+        {
+            returnValue.AddMessage("database", "No roles provided to get names for.");
+            return returnValue;
+        }
+        try
+        {
+            var roleNames = (await Connection.QueryAsync<string>(RoleSQL.GetRoleNamesForRoleIdsSQL, new { RoleIds = roleIds }, Transaction)).ToList();
+            if (roleNames.Count > 0)
+            {
+                returnValue.Data = roleNames;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "No roles found for the provided ids.");
             }
         }
         catch (Exception ex)

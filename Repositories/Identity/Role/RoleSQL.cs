@@ -64,4 +64,10 @@ internal class RoleSQL
                             WHERE {DbCommonColumns.ID} IN @RoleIds
                         ;"
                 ;
+    internal const string GetRoleNamesForRoleIdsSQL = $@"
+                            SELECT {DbRoleTable.ROLE_NAME}
+                            FROM {DbTableNames.ROLE_TABLE} 
+                            WHERE {DbCommonColumns.ID} IN @RoleIds
+                        ;"
+                ;
 }

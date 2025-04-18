@@ -8,7 +8,7 @@ namespace Persistence.Migrations.Constants
         /// <summary>
         /// UserName of the account
         /// </summary>
-        public const string USERNAME = "UserName";
+        public const string USERNAME = "Username";
         /// <summary>
         /// Email of the account
         /// </summary>

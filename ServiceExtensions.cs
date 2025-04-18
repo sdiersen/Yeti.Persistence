@@ -7,7 +7,7 @@ using Persistence.ModelValidations.Identity;
 using Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Persistence.Services;
+using Persistence.Services.Identity;
 
 namespace Persistence;
 
@@ -68,18 +68,16 @@ public static class ServiceExtensions
         UnitOfWorkAsync.SetDefaultConnectionString(connectionString);
 
         // Add UnitOfWork
-        services.AddTransient<UnitOfWork>(provider =>
-        {
-            return UnitOfWork.Create();
-        });
+        services.AddTransient<UnitOfWork>(provider => UnitOfWork.Create());
 
         // Add UnitOfWorkAsync
-        services.AddTransient(async provider =>
-        {
-            return await UnitOfWorkAsync.CreateAsync();
-        });
+        services.AddTransient(async provider => await UnitOfWorkAsync.CreateAsync());
 
         //Add Database Services
+        services.AddTransient<IAccountServices>(provider => new AccountServices(
+            provider.GetRequiredService<ILogger<AccountServices>>(),
+            provider.GetRequiredService<RepositoryFactory>(),
+            provider.GetRequiredService<ModelValidationFactory>()));
 
 
     }

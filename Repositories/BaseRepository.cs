@@ -4,7 +4,6 @@ using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models;
