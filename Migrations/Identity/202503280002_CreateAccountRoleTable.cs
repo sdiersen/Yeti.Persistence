@@ -12,6 +12,7 @@ namespace Persistence.Migrations
         public override void Up()
         {
             Create.Table($"{DbTableNames.ACCOUNT_ROLE_TABLE}")
+                .WithColumn($"{DbCommonColumns.ID}").AsInt32().PrimaryKey().Identity()
                 .WithColumn($"{DbAccountRoleTable.ACCOUNT_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.ACCOUNT_TABLE, DbAccountTable.ID)
                 .WithColumn($"{DbAccountRoleTable.ROLE_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.ROLE_TABLE, DbRoleTable.ID)
                 .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()

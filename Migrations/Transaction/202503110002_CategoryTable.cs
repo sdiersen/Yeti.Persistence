@@ -12,11 +12,11 @@ namespace Persistence.Migrations
         public override void Up()
         {
             Create.Table($"{DbTableNames.CATEGORY_TABLE}")
-                .WithColumn($"{DbCategoryTable.ID}").AsInt32().PrimaryKey().Identity()
+                .WithColumn($"{DbCommonColumns.ID}").AsInt32().PrimaryKey().Identity()
                 .WithColumn($"{DbCategoryTable.NAME}").AsString().NotNullable()
                 .WithColumn($"{DbCategoryTable.DESCRIPTION}").AsString().Nullable()
-                .WithColumn($"{DbCategoryTable.CREATED_ON}").AsDateTime().NotNullable()
-                .WithColumn($"{DbCategoryTable.MODIFIED_ON}").AsDateTime().NotNullable();
+                .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
+                .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();
         }
         public override void Down()
         {
