@@ -10,7 +10,7 @@ namespace Persistence.Repositories.Identity;
 public class UserDataRepository : BaseRepository<UserData, UserDataRepository>, IRepository<UserData>
 {
     private readonly UserDataParams _params;
-    public UserDataRepository(ILogger<UserDataRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public UserDataRepository(ILogger<UserDataRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.USER_DATA_TABLE;
         _params = new UserDataParams();

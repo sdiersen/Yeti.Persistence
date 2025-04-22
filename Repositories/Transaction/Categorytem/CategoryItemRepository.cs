@@ -10,7 +10,7 @@ namespace Persistence.Repositories.Transaction;
 public class CategoryItemRepository : BaseRepository<CategoryItem, CategoryItemRepository>, IRepository<CategoryItem>
 {
     private readonly CategoryItemParams _params;
-    public CategoryItemRepository(ILogger<CategoryItemRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public CategoryItemRepository(ILogger<CategoryItemRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.CATEGORY_ITEM_TABLE;
         _params = new CategoryItemParams();

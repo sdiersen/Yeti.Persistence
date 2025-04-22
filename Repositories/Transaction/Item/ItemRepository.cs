@@ -10,7 +10,7 @@ namespace Persistence.Repositories.Transaction;
 public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<Item>
 {
     private readonly ItemParams _params;
-    public ItemRepository(ILogger<ItemRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public ItemRepository(ILogger<ItemRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.ITEM_TABLE;
         _params = new ItemParams();

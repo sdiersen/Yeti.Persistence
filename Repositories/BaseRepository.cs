@@ -408,7 +408,7 @@ public abstract class BaseRepository<T1, T2>
 
     private static string GetSQLForTopX(int numberOfRows)
     {
-        return numberOfRows >= 0 ? $"SELECT TOP @rows * FROM {TableName}" :
+        return numberOfRows > 0 ? $"SELECT TOP @rows * FROM {TableName}" :
                                     $"SELECT * FROM {TableName}";
     }
 }

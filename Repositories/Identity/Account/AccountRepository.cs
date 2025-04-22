@@ -13,7 +13,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
 {
     private readonly AccountParams _params;
 
-    public AccountRepository(ILogger<AccountRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public AccountRepository(ILogger<AccountRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.ACCOUNT_TABLE;
         _params = new AccountParams();

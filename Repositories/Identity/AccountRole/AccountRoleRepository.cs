@@ -15,7 +15,7 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
 {
     private readonly AccountRoleParams _params;
 
-    public AccountRoleRepository(ILogger<AccountRoleRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public AccountRoleRepository(ILogger<AccountRoleRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.ACCOUNT_ROLE_TABLE;
         _params = new AccountRoleParams();

@@ -10,7 +10,7 @@ namespace Persistence.Repositories.Transaction;
 public class EntryRepository : BaseRepository<Entry, EntryRepository>, IRepository<Entry>
 {
     private readonly EntryParams _params;
-    public EntryRepository(ILogger<EntryRepository> logger, SqlConnection connection, SqlTransaction transaction) : base(logger, connection, transaction)
+    public EntryRepository(ILogger<EntryRepository> logger, SqlConnection connection, SqlTransaction? transaction = null) : base(logger, connection, transaction)
     {
         TableName = DbTableNames.ENTRY_TABLE;
         _params = new EntryParams();
