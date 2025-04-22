@@ -1,4 +1,6 @@
 #pragma warning disable 1591 // Missing XML comment for publicly visible type or member
+using Azure.Identity;
+
 using FluentMigrator;
 
 using Persistence.Migrations.Constants;
@@ -19,7 +21,30 @@ namespace Persistence.Migrations
                 .WithColumn($"{DbAccountTable.IS_LOCKED}").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
                 .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();
+
+            Insert.IntoTable($"{DbTableNames.ACCOUNT_TABLE}")
+                .Row(new
+                {
+                    Username = "cippio",
+                    Password = "koffee71", // Replace with actual hashed password
+                    LastLogin = DateTime.UtcNow,
+                    IsActive = true,
+                    IsLocked = false,
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                })
+                .Row(new
+                {
+                    Username = "admin",
+                    Password = "admin123", // Replace with actual hashed password
+                    LastLogin = DateTime.UtcNow,
+                    IsActive = true,
+                    IsLocked = false,
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                });
         }
+
 
         public override void Down()
         {

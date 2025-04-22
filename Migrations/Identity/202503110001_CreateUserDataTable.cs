@@ -18,6 +18,15 @@ namespace Persistence.Migrations
                 .WithColumn($"{DbUserDataTable.DATE_OF_BIRTH}").AsDate().Nullable()
                 .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
                 .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();
+            Insert.IntoTable($"{DbTableNames.USER_DATA_TABLE}")
+                .Row(new
+                {
+                    FirstName = "Steve",
+                    LastName = "Diersen",
+                    DateOfBirth = new DateTime(1971, 4, 21),
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                });
         }
 
         public override void Down()

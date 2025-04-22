@@ -17,6 +17,43 @@ namespace Persistence.Migrations
                 .WithColumn($"{DbAccountRoleTable.ROLE_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.ROLE_TABLE, DbRoleTable.ID)
                 .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
                 .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();
+
+            Insert.IntoTable($"{DbTableNames.ACCOUNT_ROLE_TABLE}")
+                .Row(new
+                {
+                    AccountId = 1, // cippio
+                    RoleId = 1, // Admin
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                })
+                .Row(new
+                {
+                    AccountId = 1, // cippio
+                    RoleId = 2, // User
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                })
+                .Row(new
+                {
+                    AccountId = 2, // admin
+                    RoleId = 1, // Admin
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                })
+                .Row(new
+                {
+                    AccountId = 2, // admin
+                    RoleId = 2, // User
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                })
+                .Row(new
+                {
+                    AccountId = 2, // admin
+                    RoleId = 4, // SuperAdmin
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
+                });
         }
 
         public override void Down()
