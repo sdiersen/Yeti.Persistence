@@ -27,7 +27,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
         var returnValue = new ReturnValue<Account>();
         try
         {
-            var parameters = _params.UsernameAndPasswordParam(row.UserName, row.Password);
+            var parameters = _params.UsernameAndPasswordParam(row.Username, row.Password);
             var sql = AccountSQL.GetAccountByUsernameAndPassword;
             var account = Connection.QuerySingleOrDefault<Account>(sql, parameters, Transaction);
             if (account != null)
@@ -51,7 +51,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
         var returnValue = new ReturnValue<Account>();
         try
         {
-            var parameters = _params.UsernameAndPasswordParam(row.UserName, row.Password);
+            var parameters = _params.UsernameAndPasswordParam(row.Username, row.Password);
             var sql = AccountSQL.GetAccountByUsernameAndPassword;
             var account = await Connection.QuerySingleOrDefaultAsync<Account>(sql, parameters, Transaction);
             if (account != null)
@@ -183,7 +183,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     //*****************************************************************************************************
     public ReturnValue UpdateRow(Account row)
     {
-        var resultValue = GetRowId(row.UserName, row.Password);
+        var resultValue = GetRowId(row.Username, row.Password);
         if (!resultValue.Success)
         {
             var returnValue = new ReturnValue();
@@ -194,7 +194,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     }
     public async Task<ReturnValue> UpdateRowAsync(Account row)
     {
-        var resultValue = await GetRowIdAsync(row.UserName, row.Password);
+        var resultValue = await GetRowIdAsync(row.Username, row.Password);
         if (!resultValue.Success)
         {
             var returnValue = new ReturnValue();
@@ -261,7 +261,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     //*****************************************************************************************************
     public ReturnValue DeleteRow(Account row)
     {
-        var resultValue = GetRowId(row.UserName, row.Password);
+        var resultValue = GetRowId(row.Username, row.Password);
         if (!resultValue.Success)
         {
             var rv = new ReturnValue();
@@ -272,7 +272,7 @@ public class AccountRepository : BaseRepository<Account, AccountRepository>, IRe
     }
     public async Task<ReturnValue> DeleteRowAsync(Account row)
     {
-        var resultValue = await GetRowIdAsync(row.UserName, row.Password);
+        var resultValue = await GetRowIdAsync(row.Username, row.Password);
         if (!resultValue.Success)
         {
             var rv = new ReturnValue();

@@ -6,7 +6,7 @@ namespace Persistence.Migrations.Constants
     public class DbAccountTable : DbCommonColumns
     {
         /// <summary>
-        /// UserName of the account
+        /// Username of the account
         /// </summary>
         public const string USERNAME = "Username";
         /// <summary>

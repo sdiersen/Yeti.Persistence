@@ -17,7 +17,7 @@ internal class AccountSQL
                                 OUTPUT INSERTED.{DbCommonColumns.ID}
                                 VALUES 
                                 (
-                                    @UserName, 
+                                    @Username, 
                                     @Password, 
                                     @LastLogin,
                                     @IsActive,
@@ -41,7 +41,7 @@ internal class AccountSQL
                                 OUTPUT INSERTED.{DbCommonColumns.ID}
                                 VALUES 
                                 (
-                                    @UserName, 
+                                    @Username, 
                                     @Password, 
                                     @LastLogin,
                                     @IsActive,
@@ -54,7 +54,7 @@ internal class AccountSQL
     internal const string UpdateRowSQL = $@"
                                 UPDATE {DbTableNames.ACCOUNT_TABLE} 
                                 SET 
-                                    {DbAccountTable.USERNAME} = @UserName, 
+                                    {DbAccountTable.USERNAME} = @Username, 
                                     {DbAccountTable.PASSWORD} = @Password, 
                                     {DbAccountTable.LAST_LOGIN} = @LastLogin,
                                     {DbAccountTable.IS_ACTIVE} = @IsActive,
@@ -67,14 +67,14 @@ internal class AccountSQL
     internal const string GetIdByUsernameAndPasword = $@"
                                 SELECT {DbCommonColumns.ID} 
                                 FROM {DbTableNames.ACCOUNT_TABLE}
-                                WHERE {DbAccountTable.USERNAME} = @UserName AND
+                                WHERE {DbAccountTable.USERNAME} = @Username AND
                                 {DbAccountTable.PASSWORD} = @Password
                             ;"
         ;
     internal const string GetAccountByUsernameAndPassword = $@"
                                 SELECT * 
                                 FROM {DbTableNames.ACCOUNT_TABLE}
-                                WHERE {DbAccountTable.USERNAME} = @UserName AND
+                                WHERE {DbAccountTable.USERNAME} = @Username AND
                                 {DbAccountTable.PASSWORD} = @Password
                             ;"
         ;

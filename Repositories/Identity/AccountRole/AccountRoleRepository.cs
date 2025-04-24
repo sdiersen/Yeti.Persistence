@@ -6,6 +6,7 @@ using ErrorHandling;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 
+using Persistence.DTOs.Identity;
 using Persistence.Migrations.Constants;
 using Persistence.Models.Identity;
 
@@ -239,8 +240,8 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
     public ReturnValue<List<AccountRole>> GetAccountRolesForRoleId(int roleId)
     {
         var returnValue = new ReturnValue<List<AccountRole>>
-        { 
-            Data = [] 
+        {
+            Data = []
         };
         try
         {
@@ -433,6 +434,58 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
         catch (Exception ex)
         {
             returnValue.AddError("accountrole", $"Error deleting roles for AccountId {accountId}: {ex.Message}");
+        }
+        return returnValue;
+    }
+
+    // Get the list of SingleAccountRoleDTO for a given AccountId
+    public ReturnValue<List<SingleAccountRoleDTO>> GetSingleAccountRoleDTOForAccountId(int accountId)
+    {
+        var returnValue = new ReturnValue<List<SingleAccountRoleDTO>>
+        {
+            Data = []
+        };
+        try
+        {
+            var roles = Connection.Query<SingleAccountRoleDTO>(AccountRoleSQL.GetSingleAccountRoleDTOForAccountIdSQL, new { AccountId = accountId }, Transaction).ToList();
+            if (roles.Count > 0)
+            {
+                returnValue.Data = roles;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("accountrole", $"No roles found for AccountId {accountId}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("accountrole", $"Error retrieving roles for AccountId {accountId}: {ex.Message}");
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<List<SingleAccountRoleDTO>>> GetSingleAccountRoleDTOForAccountIdAsync(int accountId)
+    {
+        var returnValue = new ReturnValue<List<SingleAccountRoleDTO>>
+        {
+            Data = []
+        };
+        try
+        {
+            var roles = (await Connection.QueryAsync<SingleAccountRoleDTO>(AccountRoleSQL.GetSingleAccountRoleDTOForAccountIdSQL, new { AccountId = accountId }, Transaction)).ToList();
+            if (roles.Count > 0)
+            {
+                returnValue.Data = roles;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("accountrole", $"No roles found for AccountId {accountId}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("accountrole", $"Error retrieving roles for AccountId {accountId}: {ex.Message}");
         }
         return returnValue;
     }

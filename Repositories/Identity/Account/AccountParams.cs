@@ -8,7 +8,7 @@ internal class AccountParams
     internal DynamicParameters AccountParamsNoId(Account row)
     {
         var parameters = new DynamicParameters();
-        parameters.Add("@UserName", row.UserName);
+        parameters.Add("@Username", row.Username);
         parameters.Add("@Password", row.Password);
         parameters.Add("@LastLogin", row.LastLogin);
         parameters.Add("@IsActive", row.IsActive);
@@ -26,7 +26,7 @@ internal class AccountParams
     internal DynamicParameters UsernameAndPasswordParam(string username, string password)
     {
         var parameters = new DynamicParameters();
-        parameters.Add("@UserName", username);
+        parameters.Add("@Username", username);
         parameters.Add("@Password", password);
         return parameters;
     }

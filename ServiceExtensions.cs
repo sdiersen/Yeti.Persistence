@@ -79,6 +79,11 @@ public static class ServiceExtensions
             provider.GetRequiredService<RepositoryFactory>(),
             provider.GetRequiredService<ModelValidationFactory>()));
 
+        services.AddTransient<IRoleServices>(provider => new RoleServices(
+            provider.GetRequiredService<ILogger<RoleServices>>(),
+            provider.GetRequiredService<RepositoryFactory>(),
+            provider.GetRequiredService<ModelValidationFactory>()));
+
 
     }
 }

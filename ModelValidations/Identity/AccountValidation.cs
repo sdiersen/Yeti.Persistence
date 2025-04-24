@@ -26,7 +26,7 @@ public class AccountValidation : IModelValidation<Account>
     {
         var returnValue = new ReturnValue();
 
-        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.UserName));
+        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.Username));
         
         returnValue.AddMessageRangeToKey("password", ValidatePassword(model.Password));
     
@@ -49,7 +49,7 @@ public class AccountValidation : IModelValidation<Account>
 
         var returnValue = new ReturnValue();
 
-        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.UserName));
+        returnValue.AddMessageRangeToKey("username", ValidateUsername(model.Username));
 
         returnValue.AddMessageRangeToKey("password", ValidatePassword(model.Password));
 
@@ -64,17 +64,17 @@ public class AccountValidation : IModelValidation<Account>
         var messages = new List<string>();
         if (string.IsNullOrWhiteSpace(username))
         {
-            messages.Add("UserName cannot be empty.");
+            messages.Add("Username cannot be empty.");
         }
         else if (username.Length < 3 || username.Length > 20)
         {
-            messages.Add("UserName must be between 3 and 20 characters long.");
+            messages.Add("Username must be between 3 and 20 characters long.");
         }
         // this might be done here or wait for an insert and let the 
         // database say there is a problem
         // else if (UsernameNotUnique(username))
         // {
-        //     messages.Add("UserName already exists.");
+        //     messages.Add("Username already exists.");
         // }
 
         return messages;

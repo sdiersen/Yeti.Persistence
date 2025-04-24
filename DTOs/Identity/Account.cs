@@ -1,5 +1,4 @@
-﻿
-using Persistence.Models.Identity;
+﻿using Persistence.Models.Identity;
 
 namespace Persistence.DTOs.Identity;
 public class LoginDTO
@@ -23,4 +22,10 @@ public class AccountLoggedInDTO
 {
     public Account Account { get; set; } = new Account();
     public List<string> RoleNames { get; set; } = [];
+}
+
+public class AccountWithRolesDTO
+{
+    public Account Account { get; set; } = new Account();
+    public List<SingleAccountRoleDTO> Roles { get; set; } = [];
 }

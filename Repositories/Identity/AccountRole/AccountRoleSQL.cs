@@ -87,4 +87,19 @@ internal class AccountRoleSQL
                                     WHERE {DbAccountRoleTable.ACCOUNT_ID} = @AccountId
                                 ;"
                         ;
+    internal const string GetSingleAccountRoleDTOForAccountIdSQL = $@"
+                                 SELECT 
+                                    ar.{DbCommonColumns.ID},
+                                    ar.{DbCommonColumns.CREATED_ON},
+                                    ar.{DbCommonColumns.MODIFIED_ON},
+                                    r.{DbRoleTable.ROLE_NAME},
+                                    r.{DbRoleTable.DESCRIPTION}
+                                FROM {DbTableNames.ACCOUNT_ROLE_TABLE} ar
+                                INNER JOIN {DbTableNames.ROLE_TABLE} r
+                                    ON ar.{DbAccountRoleTable.ROLE_ID} = r.{DbCommonColumns.ID}
+                                WHERE ar.{DbAccountRoleTable.ACCOUNT_ID} = @AccountId
+                            ;"
+                        ;
+
+
 }

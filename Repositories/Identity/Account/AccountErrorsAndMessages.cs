@@ -12,7 +12,7 @@ internal class AccountErrorsAndMessages
             case SqlException sqlException:
                 if (sqlException.Number == 2627) // Unique constraint error number
                 {
-                    returnValue.AddMessage("database", "UserName already exists.");
+                    returnValue.AddMessage("database", "Username already exists.");
                 }
                 else
                 {
@@ -32,7 +32,7 @@ internal class AccountErrorsAndMessages
             case SqlException sqlException:
                 if (sqlException.Number == 2627) // Unique constraint error number
                 {
-                    returnValue.AddMessage("database", "UserName already exists.");
+                    returnValue.AddMessage("database", "Username already exists.");
                 }
                 else
                 {

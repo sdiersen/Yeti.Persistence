@@ -22,7 +22,7 @@ namespace Persistence.Models.Identity
         /// <summary>
         /// The default user for the application.
         /// </summary>
-        /// <returns>A UserData object with UserName, Email, and Password set to string.Empty, LastLogin set to DateTime.Now, and Id set to -1.</returns>
+        /// <returns>A UserData object with Username, Email, and Password set to string.Empty, LastLogin set to DateTime.Now, and Id set to -1.</returns>
         static public UserData DefaultUser()
         {
             return new UserData { Id = -1 };

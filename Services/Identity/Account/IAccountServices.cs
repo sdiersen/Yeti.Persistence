@@ -13,4 +13,6 @@ public interface IAccountServices
     Task<ReturnValue> UpdateAccountAsync(UpdateAccountDTO account);
     ReturnValue DeleteAccount(int id);
     Task<ReturnValue> DeleteAccountAsync(int id);
+    ReturnValue<List<AccountWithRolesDTO>> GetAllAccounts();
+    Task<ReturnValue<List<AccountWithRolesDTO>>> GetAllAccountsAsync();
 }

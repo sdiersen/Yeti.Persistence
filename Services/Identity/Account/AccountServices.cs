@@ -7,6 +7,7 @@ using Persistence.Models.Identity;
 using Persistence.ModelValidations;
 using Persistence.ModelValidations.Identity;
 using Persistence.Repositories;
+using Persistence.Repositories.Identity;
 
 namespace Persistence.Services.Identity;
 public class AccountServices : IAccountServices
@@ -29,7 +30,7 @@ public class AccountServices : IAccountServices
         //validate the DTO
         var account = new Account()
         {
-            UserName = registerDTO.UserName,
+            Username = registerDTO.UserName,
             Password = registerDTO.Password,
             LastLogin = DateTime.UtcNow
         };
@@ -85,7 +86,7 @@ public class AccountServices : IAccountServices
         var validation = _modelValidationFactory.CreateAccountValidation();
         var account = new Account()
         {
-            UserName = registerDTO.UserName,
+            Username = registerDTO.UserName,
             Password = registerDTO.Password,
             LastLogin = DateTime.UtcNow
         };
@@ -114,7 +115,7 @@ public class AccountServices : IAccountServices
                 var accountRoleCreateValue = await accountRoleRepository.InsertRowAsync(new AccountRole()
                 {
                     AccountId = id,
-                    RoleId = 2 // 2 is the default for new accounts, which is the User role
+                    RoleId = 2 // 2 is the default for new accountsResult, which is the User role
                 });
                 if (!accountRoleCreateValue.Success)
                 {
@@ -143,7 +144,7 @@ public class AccountServices : IAccountServices
     {
         var account = new Account()
         {
-            UserName = loginDTO.UserName,
+            Username = loginDTO.UserName,
             Password = loginDTO.Password
         };
         //Login the account
@@ -215,7 +216,7 @@ public class AccountServices : IAccountServices
     {
         var account = new Account()
         {
-            UserName = loginDTO.UserName,
+            Username = loginDTO.UserName,
             Password = loginDTO.Password
         };
         //Login the account
@@ -504,6 +505,105 @@ public class AccountServices : IAccountServices
                 await unitOfWork.RollbackAsync();
                 returnValue.AddError("deleteaccount", "An error occurred while deleting the account.");
                 returnValue.AddError("deleteaccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+
+    public ReturnValue<List<AccountWithRolesDTO>> GetAllAccounts()
+    {
+        var returnValue = new ReturnValue<List<AccountWithRolesDTO>>();
+        returnValue.Data = new List<AccountWithRolesDTO>();
+
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            try
+            {
+                var accountsResult = accountRepository.GetFirstXRows(0);
+                if (!accountsResult.Success)
+                {
+                    returnValue.Consume(accountsResult);
+                    returnValue.AddError("accountservice", "An error occurred while retrieving accountsResult.");
+                    unitOfWork.Rollback();
+                    return returnValue;
+                }
+                var accounts = accountsResult.Data ?? new List<Account>();
+                foreach (var account in accounts)
+                {
+                    var roles = accountRoleRepository.GetSingleAccountRoleDTOForAccountId(account.Id);
+                    if (!roles.Success)
+                    {
+                        returnValue.Consume(roles);
+                        returnValue.AddError("accountservice", $"An error occurred while retrieving roles for account id: {account.Id}.");
+                        unitOfWork.Rollback();
+                        return returnValue;
+                    }
+                    var accountRolesDTO = new AccountWithRolesDTO
+                    {
+                        Account = account,
+                        Roles = roles.Data ?? []
+                    };    
+                    returnValue.Data.Add(accountRolesDTO);
+                }
+                returnValue.Success = true;
+                unitOfWork.Commit();
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("accountservice", ex.Message);
+                unitOfWork.Rollback();
+                return returnValue;
+            }
+        }
+    }   
+    public async Task<ReturnValue<List<AccountWithRolesDTO>>> GetAllAccountsAsync()
+    {
+        var returnValue = new ReturnValue<List<AccountWithRolesDTO>>();
+        returnValue.Data = new List<AccountWithRolesDTO>();
+
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        {
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            try
+            {
+                var accountsResult = await accountRepository.GetFirstXRowsAsync(0);
+                if (!accountsResult.Success)
+                {
+                    returnValue.Consume(accountsResult);
+                    returnValue.AddError("accountservice", "An error occurred while retrieving accountsResult.");
+                    await unitOfWork.RollbackAsync();
+                    return returnValue;
+                }
+                var accounts = accountsResult.Data ?? new List<Account>();
+                foreach (var account in accounts)
+                {
+                    var roles = await accountRoleRepository.GetSingleAccountRoleDTOForAccountIdAsync(account.Id);
+                    if (!roles.Success)
+                    {
+                        returnValue.Consume(roles);
+                        returnValue.AddError("accountservice", $"An error occurred while retrieving roles for account id: {account.Id}.");
+                        await unitOfWork.RollbackAsync();
+                        return returnValue;
+                    }
+                    var accountRolesDTO = new AccountWithRolesDTO
+                    {
+                        Account = account,
+                        Roles = roles.Data ?? []
+                    };
+                    returnValue.Data.Add(accountRolesDTO);
+                }
+                returnValue.Success = true;
+                await unitOfWork.CommitAsync();
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("accountservice", ex.Message);
+                await unitOfWork.RollbackAsync();
                 return returnValue;
             }
         }
