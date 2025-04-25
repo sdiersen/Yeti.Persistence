@@ -9,8 +9,8 @@ public interface IAccountServices
     Task<ReturnValue> CreateAccountAsync(RegisterDTO registerDTO);
     ReturnValue<AccountLoggedInDTO> Login(LoginDTO loginDTO);
     Task<ReturnValue<AccountLoggedInDTO>> LoginAsync(LoginDTO loginDTO);
-    ReturnValue UpdateAccount(UpdateAccountDTO account);
-    Task<ReturnValue> UpdateAccountAsync(UpdateAccountDTO account);
+    ReturnValue<AccountLoggedInDTO> UpdateAccount(UpdateAccountDTO account);
+    Task<ReturnValue<AccountLoggedInDTO>> UpdateAccountAsync(UpdateAccountDTO account);
     ReturnValue DeleteAccount(int id);
     Task<ReturnValue> DeleteAccountAsync(int id);
     ReturnValue<List<AccountWithRolesDTO>> GetAllAccounts();

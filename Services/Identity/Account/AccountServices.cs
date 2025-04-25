@@ -284,15 +284,15 @@ public class AccountServices : IAccountServices
         }
     }
 
-    public ReturnValue UpdateAccount(UpdateAccountDTO updateAccount)
+    public ReturnValue<AccountLoggedInDTO> UpdateAccount(UpdateAccountDTO updateAccount)
     {
-        var returnValue = new ReturnValue();
+        var returnValue = new ReturnValue<AccountLoggedInDTO>();
 
         // Validate the account
         var validationResult = _accountValidation.ValidateModel(updateAccount.Account);
         if (!validationResult.Success)
         {
-            return validationResult;
+            return returnValue.Consume(validationResult);
         }
         returnValue.Consume(validationResult);
 
@@ -335,6 +335,34 @@ public class AccountServices : IAccountServices
                 }
                 returnValue.Consume(updateAccountRoleResults);
 
+                // Step 4: Retrieve the updated account for the return value
+                var updatedAccount = accountRepository.GetRow(updateAccount.Account);
+                if (!updatedAccount.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(updatedAccount);
+                    return returnValue;
+                }
+                returnValue.Consume(updatedAccount);
+
+                // Step 5: Retrieve the role names for the updated account
+                var roleNamesResult = roleRepository.GetRoleNamesForRoleIds(updateAccount.Roles);
+                if (!roleNamesResult.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(roleNamesResult);
+                    return returnValue;
+                }
+                returnValue.Consume(roleNamesResult);
+
+                var accountLoggedInDTO = new AccountLoggedInDTO
+                {
+                    Account = updatedAccount.Data!,
+                    RoleNames = roleNamesResult.Data ?? []
+                };
+
+                returnValue.Data = accountLoggedInDTO;
+
                 // if it get this far the, we know this is a success
                 returnValue.Success = true;
 
@@ -353,15 +381,15 @@ public class AccountServices : IAccountServices
             }
         }
     }
-    public async Task<ReturnValue> UpdateAccountAsync(UpdateAccountDTO updateAccount)
+    public async Task<ReturnValue<AccountLoggedInDTO>> UpdateAccountAsync(UpdateAccountDTO updateAccount)
     {
-        var returnValue = new ReturnValue();
+        var returnValue = new ReturnValue<AccountLoggedInDTO>();
 
         // Validate the account
         var validationResult = _accountValidation.ValidateModel(updateAccount.Account);
         if (!validationResult.Success)
         {
-            return validationResult;
+            return returnValue.Consume(validationResult);
         }
         returnValue.Consume(validationResult);
 
@@ -403,6 +431,34 @@ public class AccountServices : IAccountServices
                     return returnValue;
                 }
                 returnValue.Consume(updateAccountRoleResults);
+
+                // Step 4: Retrieve the updated account for the return value
+                var updatedAccount = await accountRepository.GetRowAsync(updateAccount.Account);
+                if (!updatedAccount.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(updatedAccount);
+                    return returnValue;
+                }
+                returnValue.Consume(updatedAccount);
+
+                // Step 5: Retrieve the role names for the updated account
+                var roleNamesResult = await roleRepository.GetRoleNamesForRoleIdsAsync(updateAccount.Roles);
+                if (!roleNamesResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.Consume(roleNamesResult);
+                    return returnValue;
+                }
+                returnValue.Consume(roleNamesResult);
+
+                var accountLoggedInDTO = new AccountLoggedInDTO
+                {
+                    Account = updatedAccount.Data!,
+                    RoleNames = roleNamesResult.Data ?? []
+                };
+
+                returnValue.Data = accountLoggedInDTO;
 
                 // if it get this far the, we know this is a success
                 returnValue.Success = true;
