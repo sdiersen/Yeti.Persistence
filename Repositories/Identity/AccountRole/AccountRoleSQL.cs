@@ -93,6 +93,7 @@ internal class AccountRoleSQL
                                     ar.{DbCommonColumns.CREATED_ON},
                                     ar.{DbCommonColumns.MODIFIED_ON},
                                     r.{DbRoleTable.ROLE_NAME},
+                                    r.{DbRoleTable.ROLE_NUMBER},
                                     r.{DbRoleTable.DESCRIPTION}
                                 FROM {DbTableNames.ACCOUNT_ROLE_TABLE} ar
                                 INNER JOIN {DbTableNames.ROLE_TABLE} r

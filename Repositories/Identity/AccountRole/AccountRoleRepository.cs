@@ -128,6 +128,57 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
             return returnValue;
         }
     }
+    public ReturnValue DeleteRowByAccountId(int accountId)
+    {
+        try
+        {
+            var results = Connection.Execute(AccountRoleSQL.DeleteRolesForAccountIdSQL, new { AccountId = accountId }, Transaction);
+            if (results > 0)
+            {
+                var returnValue = new ReturnValue();
+                returnValue.AddMessage("accountrole", $"Successfully deleted {results} roles for AccountId {accountId}.");
+                return returnValue;
+            }
+            else
+            {
+                var returnValue = new ReturnValue();
+                returnValue.AddMessage("accountrole", $"No roles found for AccountId {accountId} to delete.");
+                return returnValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue();
+            returnValue.AddError("accountrole", $"Error deleting roles for AccountId {accountId}: {ex.Message}");
+            return returnValue;
+        }
+    }
+
+    public async Task<ReturnValue> DeleteRowByAccountIdAsync(int accountId)
+    {
+        try
+        {
+            var results = await Connection.ExecuteAsync(AccountRoleSQL.DeleteRolesForAccountIdSQL, new { AccountId = accountId }, Transaction);
+            if (results > 0)
+            {
+                var returnValue = new ReturnValue();
+                returnValue.AddMessage("accountrole", $"Successfully deleted {results} roles for AccountId {accountId}.");
+                return returnValue;
+            }
+            else
+            {
+                var returnValue = new ReturnValue();
+                returnValue.AddMessage("accountrole", $"No roles found for AccountId {accountId} to delete.");
+                return returnValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue();
+            returnValue.AddError("accountrole", $"Error deleting roles for AccountId {accountId}: {ex.Message}");
+            return returnValue;
+        }
+    }
     //******************************************************************************************************
     // AccountRole specific methods
     //******************************************************************************************************
@@ -376,7 +427,7 @@ public class AccountRoleRepository : BaseRepository<AccountRole, AccountRoleRepo
         try
         {
             // First, delete existing roles for the account
-            var deleteReturnValue = await DeleteRowAsync(new AccountRole { AccountId = accountId });
+            var deleteReturnValue = await DeleteRolesForAccountIdAsync(accountId);
             if (!deleteReturnValue.Success)
             {
                 return deleteReturnValue;

@@ -5,8 +5,11 @@ using Persistence.DTOs.Identity;
 namespace Persistence.Services.Identity;
 public interface IAccountServices
 {
-    ReturnValue CreateAccount(RegisterDTO registerDTO);
-    Task<ReturnValue> CreateAccountAsync(RegisterDTO registerDTO);
+    ReturnValue CreateAccount(RegisterDefaultDTO registerDTO);
+    Task<ReturnValue> CreateAccountAsync(RegisterDefaultDTO registerDTO);
+    ReturnValue AdminCreateAccount(UpdateAccountDTO updateAccountDTO);
+    Task<ReturnValue> AdminCreateAccountAsync(UpdateAccountDTO updateAccountDTO);
+
     ReturnValue<AccountLoggedInDTO> Login(LoginDTO loginDTO);
     Task<ReturnValue<AccountLoggedInDTO>> LoginAsync(LoginDTO loginDTO);
     ReturnValue<AccountLoggedInDTO> UpdateAccount(UpdateAccountDTO account);

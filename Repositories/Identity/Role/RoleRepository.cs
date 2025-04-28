@@ -398,7 +398,7 @@ public class RoleRepository : BaseRepository<Role, RoleRepository>, IRepository<
         }
         try
         {
-            var rolesExist = Connection.ExecuteScalar<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds }, Transaction);
+            var rolesExist = Connection.ExecuteScalar<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds, RoleCount = roleIds.Count }, Transaction);
             if (rolesExist > 0)
             {
                 returnValue.Success = true;
@@ -424,7 +424,7 @@ public class RoleRepository : BaseRepository<Role, RoleRepository>, IRepository<
         }
         try
         {
-            var rolesExist = await Connection.ExecuteScalarAsync<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds }, Transaction);
+            var rolesExist = await Connection.ExecuteScalarAsync<int>(RoleSQL.AllRolesExistSQL, new { RoleIds = roleIds, RoleCount = roleIds.Count }, Transaction);
             if (rolesExist > 0)
             {
                 returnValue.Success = true;

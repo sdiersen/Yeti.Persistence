@@ -1,6 +1,7 @@
 ﻿using ErrorHandling;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 
 using Persistence.DTOs.Identity;
 using Persistence.Models.Identity;
@@ -25,7 +26,7 @@ public class AccountServices : IAccountServices
         _accountValidation = _modelValidationFactory.CreateAccountValidation();
     }
 
-    public ReturnValue CreateAccount(RegisterDTO registerDTO)
+    public ReturnValue CreateAccount(RegisterDefaultDTO registerDTO)
     {
         //validate the DTO
         var account = new Account()
@@ -80,7 +81,7 @@ public class AccountServices : IAccountServices
             }
         }
     }
-    public async Task<ReturnValue> CreateAccountAsync(RegisterDTO registerDTO)
+    public async Task<ReturnValue> CreateAccountAsync(RegisterDefaultDTO registerDTO)
     {
         //validate the DTO
         var validation = _modelValidationFactory.CreateAccountValidation();
@@ -135,6 +136,110 @@ public class AccountServices : IAccountServices
                 await unitOfWork.RollbackAsync();
                 returnValue.AddError("CreateAccount", "An error occurred while creating the account.");
                 returnValue.AddError("CreateAccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+
+    public ReturnValue AdminCreateAccount(UpdateAccountDTO updateAccountDTO)
+    {
+        //validate the DTO
+        var validationResult = _accountValidation.ValidateModel(updateAccountDTO.Account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var returnValue = new ReturnValue();
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            try
+            {
+                var accountCreateValue = accountRepository.InsertRowAndGetId(updateAccountDTO.Account);
+                if (!accountCreateValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    returnValue.Consume(accountCreateValue);
+                    return returnValue;
+                }
+                int id = accountCreateValue.Data;
+                foreach (var role in updateAccountDTO.Roles)
+                {
+                    var accountRoleCreateValue = accountRoleRepository.InsertRow(new AccountRole()
+                    {
+                        AccountId = id,
+                        RoleId = role,
+                    });
+                    if (!accountRoleCreateValue.Success)
+                    {
+                        unitOfWork.Rollback();
+                        return accountRoleCreateValue;
+                    }
+                }
+                unitOfWork.Commit();
+                returnValue.Consume(accountCreateValue);
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                returnValue.AddError("admincreateaccount", "An error occurred while creating the account.");
+                returnValue.AddError("admincreateaccount", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> AdminCreateAccountAsync(UpdateAccountDTO updateAccountDTO)
+    {
+        //validate the DTO
+        var validationResult = _accountValidation.ValidateModel(updateAccountDTO.Account);
+        if (!validationResult.Success)
+        {
+            return validationResult;
+        }
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+        {
+            var returnValue = new ReturnValue();
+            var accountRepository = _repositoryFactory.CreateAccountRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            var accountRoleRepository = _repositoryFactory.CreateAccountRoleRepository(unitOfWork.Connection, unitOfWork.Transaction!); //Transaction is not null as Create was called with true
+            try
+            {
+                var accountCreateValue = await accountRepository.InsertRowAndGetIdAsync(updateAccountDTO.Account);
+                if (!accountCreateValue.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    returnValue.AddErrorRange(accountCreateValue.Errors);
+                    returnValue.AddMessageRange(accountCreateValue.Messages);
+                    return returnValue;
+                }
+                int id = accountCreateValue.Data;
+                foreach (var role in updateAccountDTO.Roles)
+                {
+                    var accountRoleCreateValue = await accountRoleRepository.InsertRowAsync(new AccountRole()
+                    {
+                        AccountId = id,
+                        RoleId = role,
+                    });
+                    if (!accountRoleCreateValue.Success)
+                    {
+                        await unitOfWork.RollbackAsync();
+                        return accountRoleCreateValue;
+                    }
+                }
+                await unitOfWork.CommitAsync();
+                returnValue.AddMessageRange(accountCreateValue.Messages);
+                returnValue.AddErrorRange(accountCreateValue.Errors);
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                await unitOfWork.RollbackAsync();
+                returnValue.AddError("admincreateaccount", "An error occurred while creating the account.");
+                returnValue.AddError("admincreateaccount", ex.Message);
                 return returnValue;
             }
         }
