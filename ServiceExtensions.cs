@@ -8,6 +8,7 @@ using Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Persistence.Services.Identity;
+using Persistence.Services.Transaction;
 
 namespace Persistence;
 
@@ -74,6 +75,7 @@ public static class ServiceExtensions
         services.AddTransient(async provider => await UnitOfWorkAsync.CreateAsync());
 
         //Add Database Services
+        //Identity Services
         services.AddTransient<IAccountServices>(provider => new AccountServices(
             provider.GetRequiredService<ILogger<AccountServices>>(),
             provider.GetRequiredService<RepositoryFactory>(),
@@ -81,6 +83,12 @@ public static class ServiceExtensions
 
         services.AddTransient<IRoleServices>(provider => new RoleServices(
             provider.GetRequiredService<ILogger<RoleServices>>(),
+            provider.GetRequiredService<RepositoryFactory>(),
+            provider.GetRequiredService<ModelValidationFactory>()));
+
+        //Transaction Services (probably need a better name)
+        services.AddTransient<ICategoryServices>(provider => new CategoryServices(
+            provider.GetRequiredService<ILogger<CategoryServices>>(),
             provider.GetRequiredService<RepositoryFactory>(),
             provider.GetRequiredService<ModelValidationFactory>()));
 
