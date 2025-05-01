@@ -69,7 +69,7 @@ public class CategoryServices : ICategoryServices
 
         var returnValue = new ReturnValue();
 
-        var validationResult = _categoryValidation.ValidateModel(cat);
+        var validationResult = await _categoryValidation.ValidateModelAsync(cat);
         if (!validationResult.Success)
         {
             return validationResult;

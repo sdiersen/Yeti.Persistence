@@ -24,7 +24,7 @@ namespace Persistence.Migrations.Constants
         /// <summary>
         /// This is the amount that is budgeted to this item.
         /// </summary>
-        public const string BUDGET_AMOUNT = "BudgtAmount";
+        public const string BUDGET_AMOUNT = "BudgetAmount";
         /// <summary>
         /// This is the sum of the entries for this item.
         /// </summary>

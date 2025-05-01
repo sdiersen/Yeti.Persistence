@@ -66,4 +66,22 @@ internal class ItemSQL
                             WHERE
                                 {DbCommonColumns.ID} = @Id;
                         ";
+    internal const string GetAllItemsByCategoryIdSQL = $@"
+                            SELECT 
+                                {DbCommonColumns.ID},
+                                {DbCommonColumns.CREATED_ON},
+                                {DbCommonColumns.MODIFIED_ON},
+                                {DbItemTable.NAME},
+                                {DbItemTable.NOTE},
+                                {DbItemTable.BUDGET_AMOUNT},
+                                {DbItemTable.CURRENT_AMOUNT},
+                                {DbItemTable.CATEGORY_ID},
+                                {DbItemTable.IS_EXPENSE}
+                            FROM 
+                                {DbTableNames.ITEM_TABLE}
+                            WHERE 
+                                {DbItemTable.CATEGORY_ID} = @CategoryId
+                            ORDER BY 
+                                {DbItemTable.NAME};
+                        ";
 }

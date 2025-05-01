@@ -1,4 +1,6 @@
-﻿using ErrorHandling;
+﻿using Dapper;
+
+using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -86,5 +88,57 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
     public async Task<ReturnValue> DeleteRowAsync(Item row)
     {
         return await DeleteRowAsync(row.Id);
+    }
+
+    //******************************************************************************************************
+    // Item specific methods
+    //******************************************************************************************************
+    public ReturnValue<List<Item>> GetAllItemsByCategoryId(int categoryId)
+    {
+        var returnValue = new ReturnValue<List<Item>>();
+
+        try
+        {
+            var sql = ItemSQL.GetAllItemsByCategoryIdSQL;
+            var items = Connection.Query<Item>(sql, new { CategoryId = categoryId }, Transaction).AsList();
+            if (items.Count > 0)
+            {
+                returnValue.Data = items;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("getitembycategoryid", "No items found for the specified category ID.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<List<Item>>> GetAllItemsByCategoryIdAsync(int categoryId)
+    {
+        var returnValue = new ReturnValue<List<Item>>();
+
+        try
+        {
+            var sql = ItemSQL.GetAllItemsByCategoryIdSQL;
+            var items = (await Connection.QueryAsync<Item>(sql, new { CategoryId = categoryId }, Transaction)).AsList();
+            if (items.Count > 0)
+            {
+                returnValue.Data = items;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("getitembycategoryid", "No items found for the specified category ID.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
     }
 }

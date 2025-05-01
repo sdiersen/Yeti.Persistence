@@ -36,6 +36,5 @@
     <Folder Include="Services\Identity\UserData\" />
     <Folder Include="Services\Transaction\CategoryItem\" />
     <Folder Include="Services\Transaction\Entry\" />
-    <Folder Include="Services\Transaction\Item\" />
   </ItemGroup>	
 </Project>
