@@ -1,16 +1,15 @@
-﻿
-
-using ErrorHandling;
+﻿using ErrorHandling;
 
 using Microsoft.Extensions.Logging;
 
 using Persistence.DTOs.Transaction;
+using Persistence.Models.Transaction;
 using Persistence.ModelValidations;
 using Persistence.ModelValidations.Transaction;
 using Persistence.Repositories;
 
 namespace Persistence.Services.Transaction;
-public class EntryServices
+public class EntryServices : IEntryServices
 {
     private readonly ILogger<EntryServices> _logger;
     private readonly RepositoryFactory _repositoryFactory;
@@ -28,8 +27,140 @@ public class EntryServices
         _entryValidation = _modelValidationFactory.CreateEntryValidation();
     }
 
-    //public ReturnValue CreateEntry(EntryDTO entryDTO)
-    //{
+    public ReturnValue CreateEntry(EntryDTO entryDTO)
+    {
+        var isItemUnattached = entryDTO.ItemId == -1;
+        var isCategoryUnattached = entryDTO.CategoryId == -1;
+        var entry = new Entry
+        {
+            EntryDate = entryDTO.EntryDate,
+            Amount = entryDTO.Amount,
+            IsExpense = entryDTO.IsExpense,
+            Note = entryDTO.Note,
+            ItemId = isItemUnattached ? int.MaxValue : entryDTO.ItemId,
+            CategoryId = isCategoryUnattached ? int.MaxValue : entryDTO.CategoryId
+        };
 
-    //}
+        var returnValue = _entryValidation.ValidateModel(entry);
+        if (!returnValue.Success)
+        {
+            return returnValue;
+        }
+
+        using (var unitOfWork = UnitOfWork.Create())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            try
+            {
+                // check for unattached items and categories, if so, get the correct id values
+                if (isItemUnattached)
+                {
+                    var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                    var result = itemRepository.GetUnattachedId();
+                    if (result.Success)
+                    {
+                        entry.ItemId = result.Data; // use the unattached item id
+                    }
+                    else
+                    {
+                        returnValue.Consume(result);
+                    }
+                }
+                if (isCategoryUnattached)
+                {
+                    var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                    var result = categoryRepository.GetUnattachedId();
+                    if (result.Success)
+                    {
+                        entry.CategoryId = result.Data; // use the unattached category id
+                    }
+                    else
+                    {
+                        returnValue.Consume(result);
+                        return returnValue;
+                    }
+                }
+
+                var repoResult = entryRepository.InsertRow(entry);
+                if (!repoResult.Success)
+                {
+                    return repoResult;
+                }
+                returnValue.Consume(repoResult);
+                returnValue.Success = true;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("createentry", ex.Message);
+            }
+            return returnValue;
+        }
+    }
+
+    public async Task<ReturnValue> CreateEntryAsync(EntryDTO entryDTO)
+    {
+        var isItemUnattached = entryDTO.ItemId == -1;
+        var isCategoryUnattached = entryDTO.CategoryId == -1;
+        var entry = new Entry
+        {
+            EntryDate = entryDTO.EntryDate,
+            Amount = entryDTO.Amount,
+            IsExpense = entryDTO.IsExpense,
+            Note = entryDTO.Note,
+            ItemId = isItemUnattached ? int.MaxValue : entryDTO.ItemId,
+            CategoryId = isCategoryUnattached ? int.MaxValue : entryDTO.CategoryId
+        };
+        var returnValue = await _entryValidation.ValidateModelAsync(entry);
+        if (!returnValue.Success)
+        {
+            return returnValue;
+        }
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            try
+            {
+                // check for unattached items and categories, if so, get the correct id values
+                if (isItemUnattached)
+                {
+                    var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                    var result = await itemRepository.GetUnattachedIdAsync();
+                    if (result.Success)
+                    {
+                        entry.ItemId = result.Data; // use the unattached item id
+                    }
+                    else
+                    {
+                        returnValue.Consume(result);
+                    }
+                }
+                if (isCategoryUnattached)
+                {
+                    var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                    var result = await categoryRepository.GetUnattachedIdAsync();
+                    if (result.Success)
+                    {
+                        entry.CategoryId = result.Data; // use the unattached category id
+                    }
+                    else
+                    {
+                        returnValue.Consume(result);
+                        return returnValue;
+                    }
+                }
+                var repoResult = await entryRepository.InsertRowAsync(entry);
+                if (!repoResult.Success)
+                {
+                    return repoResult;
+                }
+                returnValue.Consume(repoResult);
+                returnValue.Success = true;
+            }
+            catch (Exception ex)
+            {
+                returnValue.AddError("createentry", ex.Message);
+            }
+            return returnValue;
+        }
+    }
 }

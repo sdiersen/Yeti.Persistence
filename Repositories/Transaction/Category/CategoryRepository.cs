@@ -1,4 +1,6 @@
 ﻿
+using Dapper;
+
 using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
@@ -88,5 +90,52 @@ public class CategoryRepository : BaseRepository<Category, CategoryRepository>, 
     public async Task<ReturnValue> DeleteRowAsync(Category row)
     {
         return await DeleteRowAsync(row.Id);
+    }
+    //******************************************************************************************************
+    // Category specific methods
+    //******************************************************************************************************
+    public ReturnValue<int> GetUnattachedId()
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var result = Connection.QueryFirstOrDefault<int>(CategorySQL.GetUnattachedIdSQL, Transaction);
+            if (result > 0)
+            {
+                returnValue.Data = result;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddError("database", "No row in Category table with Name = 'unattached'.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<int>> GetUnattachedIdAsync()
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var result = await Connection.QueryFirstOrDefaultAsync<int>(CategorySQL.GetUnattachedIdSQL, Transaction);
+            if (result > 0)
+            {
+                returnValue.Data = result;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddError("database", "No row in Category table with Name = 'unattached'.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
     }
 }

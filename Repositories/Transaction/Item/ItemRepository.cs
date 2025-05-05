@@ -141,4 +141,51 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         }
         return returnValue;
     }
+
+    public ReturnValue<int> GetUnattachedId()
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var sql = ItemSQL.GetUnattachedIdSQL;
+            var id = Connection.QuerySingleOrDefault<int>(sql, Transaction);
+            if (id > 0)
+            {
+                returnValue.Data = id;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "No row in Item table with Name='unattached'.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<int>> GetUnattachedIdAsync()
+    {
+        var returnValue = new ReturnValue<int>();
+        try
+        {
+            var sql = ItemSQL.GetUnattachedIdSQL;
+            var id = await Connection.QuerySingleOrDefaultAsync<int>(sql, Transaction);
+            if (id > 0)
+            {
+                returnValue.Data = id;
+                returnValue.Success = true;
+            }
+            else
+            {
+                returnValue.AddMessage("database", "No row in Item table with Name='unattached'.");
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
 }

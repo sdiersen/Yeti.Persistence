@@ -46,4 +46,11 @@ internal class CategorySQL
             WHERE
                 {DbCommonColumns.ID} = @Id;
         ";
+
+    internal const string GetUnattachedIdSQL = @$"
+            SELECT {DbCommonColumns.ID}
+            FROM {DbTableNames.CATEGORY_TABLE}
+            WHERE {DbCategoryTable.NAME} = 'unattached'
+            );
+        ";
 }

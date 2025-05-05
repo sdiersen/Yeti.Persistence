@@ -84,4 +84,12 @@ internal class ItemSQL
                             ORDER BY 
                                 {DbItemTable.NAME};
                         ";
+    internal const string GetUnattachedIdSQL = $@"
+                            SELECT 
+                                {DbCommonColumns.ID}
+                            FROM 
+                                {DbTableNames.ITEM_TABLE}
+                            WHERE 
+                                {DbItemTable.NAME} = 'Unattached'
+                        ";
 }

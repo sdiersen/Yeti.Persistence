@@ -1,7 +1,6 @@
 ﻿using ErrorHandling;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 
 using Persistence.DTOs.Transaction;
 using Persistence.Models.Transaction;
@@ -26,7 +25,7 @@ public class CategoryServices : ICategoryServices
     }
 
     public ReturnValue CreateCategory(CategoryDTO categoryDTO)
-    {
+    {   
         var cat = new Category();
         cat.Name = categoryDTO.Name;
         cat.Description = categoryDTO.Description;
