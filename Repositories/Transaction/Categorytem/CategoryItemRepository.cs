@@ -1,7 +1,10 @@
-﻿using ErrorHandling;
+﻿using Dapper;
+
+using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Transaction;
@@ -88,5 +91,50 @@ public class CategoryItemRepository : BaseRepository<CategoryItem, CategoryItemR
     public async Task<ReturnValue> DeleteRowAsync(CategoryItem row)
     {
         return await DeleteRowAsync(row.Id);
+    }
+    //******************************************************************************************************
+    // Category_Item specific methods
+    //******************************************************************************************************
+    public ReturnValue<List<int>> GetAllItemsForCategoryId(int categoryId)
+    {
+        var returnValue = new ReturnValue<List<int>>();
+        try
+        {
+            var sql = CategoryItemSQL.GetItemIdsByCategoryId;
+            var results = Connection.Query<int>(sql, new { CategoryId = categoryId }, Transaction);
+            returnValue.Data = results.AsList();
+            returnValue.Success = true;
+            if (returnValue.Data.Count == 0)
+            {
+                returnValue.AddError("getallitemsforcategoryid", "No items found for the given category ID.");
+            }
+            return returnValue;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("getallitemsforcategoryid", ex.Message);
+            return returnValue;
+        }
+    }
+    public async Task<ReturnValue<List<int>>> GetAllItemsForCategoryIdAsync(int categoryId)
+    {
+        var returnValue = new ReturnValue<List<int>>();
+        try
+        {
+            var sql = CategoryItemSQL.GetItemIdsByCategoryId;
+            var results = await Connection.QueryAsync<int>(sql, new { CategoryId = categoryId }, Transaction);
+            returnValue.Data = results.AsList();
+            returnValue.Success = true;
+            if (returnValue.Data.Count == 0)
+            {
+                returnValue.AddError("getallitemsforcategoryid", "No items found for the given category ID.");
+            }
+            return returnValue;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("getallitemsforcategoryid", ex.Message);
+            return returnValue;
+        }
     }
 }

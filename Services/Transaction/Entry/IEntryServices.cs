@@ -2,10 +2,17 @@
 using ErrorHandling;
 
 using Persistence.DTOs.Transaction;
+using Persistence.Models.Transaction;
 
 namespace Persistence.Services.Transaction;
 public interface IEntryServices
 {
     ReturnValue CreateEntry(EntryDTO entryDTO);
     Task<ReturnValue> CreateEntryAsync(EntryDTO entryDTO);
+
+    ReturnValue<List<Entry>> GetAllEntries();
+    Task<ReturnValue<List<Entry>>> GetAllEntriesAsync();
+
+    ReturnValue<List<Entry>> GetAllEntriesByItemId(int itemId);
+    Task<ReturnValue<List<Entry>>> GetAllEntriesByItemIdAsync(int itemId);
 }

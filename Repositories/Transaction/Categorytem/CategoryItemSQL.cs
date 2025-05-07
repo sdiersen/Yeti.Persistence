@@ -47,4 +47,14 @@ internal class CategoryItemSQL
                 {DbCommonColumns.ID} = @Id
             ;
         ";
+    internal const string GetItemIdsByCategoryId = @$"
+            SELECT {DbCategoryItemTable.ITEM_ID}
+            FROM {DbTableNames.CATEGORY_ITEM_TABLE}
+            WHERE {DbCategoryItemTable.CATEGORY_ID} = @CategoryId
+        ";
+    internal const string GetCategoryIdsByItemId = @$"
+            SELECT {DbCategoryItemTable.CATEGORY_ID}
+            FROM {DbTableNames.CATEGORY_ITEM_TABLE}
+            WHERE {DbCategoryItemTable.ITEM_ID} = @ItemId
+        ";
 }

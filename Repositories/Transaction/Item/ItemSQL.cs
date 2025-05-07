@@ -68,15 +68,7 @@ internal class ItemSQL
                         ";
     internal const string GetAllItemsByCategoryIdSQL = $@"
                             SELECT 
-                                {DbCommonColumns.ID},
-                                {DbCommonColumns.CREATED_ON},
-                                {DbCommonColumns.MODIFIED_ON},
-                                {DbItemTable.NAME},
-                                {DbItemTable.NOTE},
-                                {DbItemTable.BUDGET_AMOUNT},
-                                {DbItemTable.CURRENT_AMOUNT},
-                                {DbItemTable.CATEGORY_ID},
-                                {DbItemTable.IS_EXPENSE}
+                                *
                             FROM 
                                 {DbTableNames.ITEM_TABLE}
                             WHERE 
@@ -91,5 +83,13 @@ internal class ItemSQL
                                 {DbTableNames.ITEM_TABLE}
                             WHERE 
                                 {DbItemTable.NAME} = 'Unattached'
+                        ";
+    internal const string GetItemsByIdsSQL = $@"
+                            SELECT 
+                                *
+                            FROM 
+                                {DbTableNames.ITEM_TABLE}
+                            WHERE 
+                                {DbCommonColumns.ID} IN (@ItemIds)
                         ";
 }

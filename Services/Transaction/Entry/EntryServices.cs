@@ -1,6 +1,7 @@
 ﻿using ErrorHandling;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 
 using Persistence.DTOs.Transaction;
 using Persistence.Models.Transaction;
@@ -96,7 +97,6 @@ public class EntryServices : IEntryServices
             return returnValue;
         }
     }
-
     public async Task<ReturnValue> CreateEntryAsync(EntryDTO entryDTO)
     {
         var isItemUnattached = entryDTO.ItemId == -1;
@@ -161,6 +161,51 @@ public class EntryServices : IEntryServices
                 returnValue.AddError("createentry", ex.Message);
             }
             return returnValue;
+        }
+    }
+
+    public ReturnValue<List<Entry>> GetAllEntries()
+    {
+        using (var unitOfWork = UnitOfWork.Create())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var result = entryRepository.GetFirstXRows(0);
+            if (!result.Success)
+            {
+                return result;
+            }
+            return result;
+        }
+    }
+    public async Task<ReturnValue<List<Entry>>> GetAllEntriesAsync()
+    {
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var result = await entryRepository.GetFirstXRowsAsync(0);
+            if (!result.Success)
+            {
+                return result;
+            }
+            return result;
+        }
+    }
+
+    public ReturnValue<List<Entry>> GetAllEntriesByItemId(int itemId)
+    {
+        using (var unitOfWork = UnitOfWork.Create())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            return entryRepository.GetAllEntriesForItemId(itemId);
+        }
+    }   
+    public async Task<ReturnValue<List<Entry>>> GetAllEntriesByItemIdAsync(int itemId)
+    {
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        {
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var result = await entryRepository.GetAllEntriesForItemIdAsync(itemId);
+            return result;
         }
     }
 }

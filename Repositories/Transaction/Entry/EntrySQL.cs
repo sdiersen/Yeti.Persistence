@@ -65,4 +65,10 @@ internal class EntrySQL
                             WHERE {DbCommonColumns.ID} = @Id
                             ;
                         ";
+    internal const string GetAllEntriesForItemIdSQL = @$"
+                            SELECT *
+                            FROM {DbTableNames.ENTRY_TABLE} 
+                            WHERE {DbEntryTable.ITEM_ID} = @ItemId
+                            ;
+                        ";
 }

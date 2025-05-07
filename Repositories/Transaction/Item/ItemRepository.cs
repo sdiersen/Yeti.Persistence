@@ -101,15 +101,12 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         {
             var sql = ItemSQL.GetAllItemsByCategoryIdSQL;
             var items = Connection.Query<Item>(sql, new { CategoryId = categoryId }, Transaction).AsList();
-            if (items.Count > 0)
-            {
-                returnValue.Data = items;
-                returnValue.Success = true;
-            }
-            else
+            if (items.Count <= 0)
             {
                 returnValue.AddMessage("getitembycategoryid", "No items found for the specified category ID.");
             }
+            returnValue.Data = items;
+            returnValue.Success = true;
         }
         catch (Exception ex)
         {
@@ -125,15 +122,12 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         {
             var sql = ItemSQL.GetAllItemsByCategoryIdSQL;
             var items = (await Connection.QueryAsync<Item>(sql, new { CategoryId = categoryId }, Transaction)).AsList();
-            if (items.Count > 0)
-            {
-                returnValue.Data = items;
-                returnValue.Success = true;
-            }
-            else
+            if (items.Count <= 0)
             {
                 returnValue.AddMessage("getitembycategoryid", "No items found for the specified category ID.");
             }
+            returnValue.Data = items;
+            returnValue.Success = true;
         }
         catch (Exception ex)
         {
@@ -181,6 +175,62 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
             {
                 returnValue.AddMessage("database", "No row in Item table with Name='unattached'.");
             }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+
+    public ReturnValue<List<Item>> GetItems(List<int> itemIds)
+    {
+        var returnValue = new ReturnValue<List<Item>>();
+        if (itemIds == null || itemIds.Count == 0)
+        {
+            returnValue.AddMessage("getitembyids", "No item IDs provided.");
+            returnValue.Data = new List<Item>();
+            returnValue.Success = true;
+            return returnValue;
+        }
+        try
+        {
+            var sql = ItemSQL.GetItemsByIdsSQL;
+            var items = Connection.Query<Item>(sql, new { ItemIds = itemIds }, Transaction).AsList();
+            if (items.Count <= 0)
+            {
+                returnValue.AddMessage("getitembyids", "No items found for the specified IDs.");
+            }
+            returnValue.Data = items;
+            returnValue.Success = true;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+
+    public async Task<ReturnValue<List<Item>>> GetItemsAsync(List<int> itemIds)
+    {
+        var returnValue = new ReturnValue<List<Item>>();
+        if (itemIds == null || itemIds.Count == 0)
+        {
+            returnValue.AddMessage("getitembyids", "No item IDs provided.");
+            returnValue.Data = new List<Item>();
+            returnValue.Success = true;
+            return returnValue;
+        }
+        try
+        {
+            var sql = ItemSQL.GetItemsByIdsSQL;
+            var items = (await Connection.QueryAsync<Item>(sql, new { ItemIds = itemIds }, Transaction)).AsList();
+            if (items.Count <= 0)
+            {
+                returnValue.AddMessage("getitembyids", "No items found for the specified IDs.");
+            }
+            returnValue.Data = items;
+            returnValue.Success = true;
         }
         catch (Exception ex)
         {

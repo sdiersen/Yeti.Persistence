@@ -147,9 +147,15 @@ public class ItemServices : IItemServices
         var returnValue = new ReturnValue<List<Item>>();
         using (var unitOfWork = UnitOfWork.Create())
         {
+            var categoryItemRepository = _repositoryFactory.CreateCategoryItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
             var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
             try
             {
+                var items = categoryItemRepository.GetAllItemsForCategoryId(categoryId);
+                if (!items.Success)
+                {
+                    returnValue.Consume(items);
+                }
                 returnValue = itemRepository.GetAllItemsByCategoryId(categoryId);
                 if (!returnValue.Success)
                 {

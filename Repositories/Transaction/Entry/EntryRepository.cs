@@ -1,7 +1,10 @@
-﻿using ErrorHandling;
+﻿using Dapper;
+
+using ErrorHandling;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 using Persistence.Migrations.Constants;
 using Persistence.Models.Transaction;
@@ -87,4 +90,58 @@ public class EntryRepository : BaseRepository<Entry, EntryRepository>, IReposito
     {
         return await DeleteRowAsync(row.Id);
     }
+    //******************************************************************************************************
+    // Entry specific methods
+    //******************************************************************************************************
+    public ReturnValue<List<Entry>> GetAllEntriesForItemId(int itemId)
+    {
+        var returnValue = new ReturnValue<List<Entry>>();
+        try
+        {
+            var result = Connection.Query<Entry>(EntrySQL.GetAllEntriesForItemIdSQL, new { ItemId = itemId },
+                Transaction
+            );
+            if (result == null || result.Count() == 0)
+            {
+                returnValue.AddMessage("database", "No entries found for item id: " + itemId);
+            }
+            returnValue.Success = true;
+        }
+        catch (SqlException ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue<List<Entry>>> GetAllEntriesForItemIdAsync(int itemId)
+    {
+        var returnValue = new ReturnValue<List<Entry>>();
+        try
+        {
+            var result = await Connection.QueryAsync<Entry>(EntrySQL.GetAllEntriesForItemIdSQL, new { ItemId = itemId },
+                Transaction
+            );
+            Logger.LogWarning($"Itemid: {itemId}\n\rResults: {result.Count()}");
+            if (result == null || result.Count() == 0)
+            {
+                returnValue.AddMessage("database", "No entries found for item id: " + itemId);
+            }
+            returnValue.Data = result!.ToList();
+            returnValue.Success = true;
+        }
+        catch (SqlException ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+
 }
