@@ -101,11 +101,12 @@ public class EntryRepository : BaseRepository<Entry, EntryRepository>, IReposito
             var result = Connection.Query<Entry>(EntrySQL.GetAllEntriesForItemIdSQL, new { ItemId = itemId },
                 Transaction
             );
-            if (result == null || result.Count() == 0)
+            returnValue.Data = result.ToList();
+            returnValue.Success = true;
+            if (returnValue.Data.Count <= 0)
             {
                 returnValue.AddMessage("database", "No entries found for item id: " + itemId);
-            }
-            returnValue.Success = true;
+            }            
         }
         catch (SqlException ex)
         {
@@ -125,13 +126,13 @@ public class EntryRepository : BaseRepository<Entry, EntryRepository>, IReposito
             var result = await Connection.QueryAsync<Entry>(EntrySQL.GetAllEntriesForItemIdSQL, new { ItemId = itemId },
                 Transaction
             );
-            Logger.LogWarning($"Itemid: {itemId}\n\rResults: {result.Count()}");
-            if (result == null || result.Count() == 0)
+            returnValue.Data = result.ToList();
+            returnValue.Success = true;
+            if (returnValue.Data.Count <= 0)
             {
                 returnValue.AddMessage("database", "No entries found for item id: " + itemId);
             }
-            returnValue.Data = result!.ToList();
-            returnValue.Success = true;
+
         }
         catch (SqlException ex)
         {

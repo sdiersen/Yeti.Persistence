@@ -11,7 +11,9 @@ using Persistence.Repositories;
 namespace Persistence.Services.Transaction;
 public class CategoryServices : ICategoryServices
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private readonly ILogger<CategoryServices> _logger;
+#pragma warning restore IDE0052 // Remove unread private members
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ModelValidationFactory _modelValidationFactory;
     private readonly CategoryValidation _categoryValidation;
@@ -25,10 +27,12 @@ public class CategoryServices : ICategoryServices
     }
 
     public ReturnValue CreateCategory(CategoryDTO categoryDTO)
-    {   
-        var cat = new Category();
-        cat.Name = categoryDTO.Name;
-        cat.Description = categoryDTO.Description;
+    {
+        var cat = new Category
+        {
+            Name = categoryDTO.Name,
+            Description = categoryDTO.Description
+        };
 
         var returnValue = new ReturnValue();
 
@@ -62,9 +66,11 @@ public class CategoryServices : ICategoryServices
     }
     public async Task<ReturnValue> CreateCategoryAsync(CategoryDTO categoryDTO)
     {
-        var cat = new Category();
-        cat.Name = categoryDTO.Name;
-        cat.Description = categoryDTO.Description;
+        var cat = new Category
+        {
+            Name = categoryDTO.Name,
+            Description = categoryDTO.Description
+        };
 
         var returnValue = new ReturnValue();
 

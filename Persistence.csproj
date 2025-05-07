@@ -34,6 +34,5 @@
   <ItemGroup>
     <Folder Include="Services\Identity\AccountRole\" />
     <Folder Include="Services\Identity\UserData\" />
-    <Folder Include="Services\Transaction\CategoryItem\" />
   </ItemGroup>	
 </Project>

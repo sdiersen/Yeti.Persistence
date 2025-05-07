@@ -61,11 +61,5 @@ namespace Persistence.ModelValidations
             var logger = _loggerFactory.CreateLogger<EntryValidation>();
             return new EntryValidation(logger);
         }
-
-        public CategoryItemValidation CreateCategoryItemValidation()
-        {
-            var logger = _loggerFactory.CreateLogger<CategoryItemValidation>();
-            return new CategoryItemValidation(logger);
-        }
     }
 }

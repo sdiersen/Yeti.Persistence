@@ -18,9 +18,6 @@ public class CategoryTable : Migration
     }
     public override void Down()
     {
-        // Delete the dependent CategoryItemTable first, if it exists
-        Delete.Table($"{DbTableNames.CATEGORY_ITEM_TABLE}").IfExists();
-
         Delete.Table($"{DbTableNames.CATEGORY_TABLE}");
     }
 }

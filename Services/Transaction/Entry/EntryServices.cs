@@ -12,7 +12,9 @@ using Persistence.Repositories;
 namespace Persistence.Services.Transaction;
 public class EntryServices : IEntryServices
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private readonly ILogger<EntryServices> _logger;
+#pragma warning restore IDE0052 // Remove unread private members
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ModelValidationFactory _modelValidationFactory;
     private readonly EntryValidation _entryValidation;
@@ -166,28 +168,36 @@ public class EntryServices : IEntryServices
 
     public ReturnValue<List<Entry>> GetAllEntries()
     {
-        using (var unitOfWork = UnitOfWork.Create())
+        try
         {
-            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
-            var result = entryRepository.GetFirstXRows(0);
-            if (!result.Success)
+            using (var unitOfWork = UnitOfWork.Create())
             {
-                return result;
+                var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                return entryRepository.GetFirstXRows(0);
             }
-            return result;
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue<List<Entry>>();
+            returnValue.AddError("getallentries", ex.Message);
+            return returnValue;
         }
     }
     public async Task<ReturnValue<List<Entry>>> GetAllEntriesAsync()
     {
-        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        try
         {
-            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
-            var result = await entryRepository.GetFirstXRowsAsync(0);
-            if (!result.Success)
+            await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
             {
-                return result;
+                var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                return await entryRepository.GetFirstXRowsAsync(0);
             }
-            return result;
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue<List<Entry>>();
+            returnValue.AddError("getallentries", ex.Message);
+            return returnValue;
         }
     }
 

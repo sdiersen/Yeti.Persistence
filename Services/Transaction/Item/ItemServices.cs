@@ -13,7 +13,9 @@ using Persistence.Repositories;
 namespace Persistence.Services.Transaction;
 public class ItemServices : IItemServices
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private readonly ILogger<ItemServices> _logger;
+#pragma warning restore IDE0052 // Remove unread private members
     private readonly RepositoryFactory _repositoryFactory;
     private readonly ModelValidationFactory _modelValidationFactory;
     private readonly ItemValidation _itemValidation;
@@ -144,49 +146,35 @@ public class ItemServices : IItemServices
 
     public ReturnValue<List<Item>> GetAllItemsByCategoryId(int categoryId)
     {
-        var returnValue = new ReturnValue<List<Item>>();
-        using (var unitOfWork = UnitOfWork.Create())
+        try
         {
-            var categoryItemRepository = _repositoryFactory.CreateCategoryItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
-            var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
-            try
+            using (var unitOfWork = UnitOfWork.Create())
             {
-                var items = categoryItemRepository.GetAllItemsForCategoryId(categoryId);
-                if (!items.Success)
-                {
-                    returnValue.Consume(items);
-                }
-                returnValue = itemRepository.GetAllItemsByCategoryId(categoryId);
-                if (!returnValue.Success)
-                {
-                    return returnValue;
-                }
+                var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                return itemRepository.GetAllItemsByCategoryId(categoryId);
             }
-            catch (Exception ex)
-            {
-                returnValue.AddError("getitembycategoryid", ex.Message);
-            }
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue<List<Item>>();
+            returnValue.AddError("getitembycategoryid", ex.Message);
             return returnValue;
         }
     }
     public async Task<ReturnValue<List<Item>>> GetAllItemsByCategoryIdAsync(int categoryId)
     {
-        var returnValue = new ReturnValue<List<Item>>();
-        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
+        try
         {
-            var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
-            try
+            await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
             {
-                returnValue = await itemRepository.GetAllItemsByCategoryIdAsync(categoryId);
-                if (!returnValue.Success)
-                {
-                    return returnValue;
-                }
+                var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                return await itemRepository.GetAllItemsByCategoryIdAsync(categoryId);
             }
-            catch (Exception ex)
-            {
-                returnValue.AddError("getitembycategoryid", ex.Message);
-            }
+        }
+        catch (Exception ex)
+        {
+            var returnValue = new ReturnValue<List<Item>>();
+            returnValue.AddError("getitembycategoryid", ex.Message);
             return returnValue;
         }
     }

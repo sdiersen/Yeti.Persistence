@@ -46,11 +46,6 @@ public class RepositoryFactory
         var logger = _loggerFactory.CreateLogger<CategoryRepository>();
         return new CategoryRepository(logger, connection, transaction);
     }
-    public CategoryItemRepository CreateCategoryItemRepository(SqlConnection connection, SqlTransaction? transaction)
-    {
-        var logger = _loggerFactory.CreateLogger<CategoryItemRepository>();
-        return new CategoryItemRepository(logger, connection, transaction);
-    }
     public EntryRepository CreateEntryRepository(SqlConnection connection, SqlTransaction? transaction)
     {
         var logger = _loggerFactory.CreateLogger<EntryRepository>();

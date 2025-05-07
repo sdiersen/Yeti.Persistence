@@ -189,7 +189,7 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         if (itemIds == null || itemIds.Count == 0)
         {
             returnValue.AddMessage("getitembyids", "No item IDs provided.");
-            returnValue.Data = new List<Item>();
+            returnValue.Data = [];
             returnValue.Success = true;
             return returnValue;
         }
@@ -217,7 +217,7 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         if (itemIds == null || itemIds.Count == 0)
         {
             returnValue.AddMessage("getitembyids", "No item IDs provided.");
-            returnValue.Data = new List<Item>();
+            returnValue.Data = [];
             returnValue.Success = true;
             return returnValue;
         }
