@@ -92,4 +92,14 @@ internal class ItemSQL
                             WHERE 
                                 {DbCommonColumns.ID} IN (@ItemIds)
                         ";
+    internal const string IsValidIdSQL = $@"
+                            SELECT CASE WHEN EXISTS (
+                                SELECT 1
+                                FROM {DbTableNames.ITEM_TABLE}
+                                WHERE {DbCommonColumns.ID} = @Id
+                            )
+                            THEN 1
+                            ELSE 0
+                            END;
+                        ";
 }

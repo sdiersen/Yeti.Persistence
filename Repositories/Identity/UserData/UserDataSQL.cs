@@ -44,7 +44,7 @@ internal class UserDataSQL
         ;
 
     internal const string UpdateUserDataSQL = $@"
-                            UPDATE {DbTableNames.USER_DATA_TABLE} 
+                            UPDATE {DbTableNames.USER_DATA_TABLE} WITH (ROWLOCK)
                             SET                                 
                                 {DbUserDataTable.FIRST_NAME} = @FirstName, 
                                 {DbUserDataTable.LAST_NAME} = @LastName,

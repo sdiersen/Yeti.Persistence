@@ -39,7 +39,7 @@ internal class RoleSQL
                 ;
 
     internal const string UpdateRoleSQL = $@"
-                            UPDATE {DbTableNames.ROLE_TABLE} 
+                            UPDATE {DbTableNames.ROLE_TABLE} WITH (ROWLOCK)
                             SET                                 
                                 {DbRoleTable.ROLE_NAME} = @RoleName, 
                                 {DbRoleTable.ROLE_NUMBER} = @RoleNumber,

@@ -53,7 +53,7 @@ internal class EntrySQL
                             );
                         ";
     internal const string UpdateRowSQL = @$"
-                            UPDATE {DbTableNames.ENTRY_TABLE} 
+                            UPDATE {DbTableNames.ENTRY_TABLE} WITH (ROWLOCK)
                             SET 
                                 {DbCommonColumns.MODIFIED_ON} = @ModifiedOn,
                                 {DbEntryTable.AMOUNT} = @Amount,

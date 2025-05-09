@@ -138,4 +138,44 @@ public class CategoryRepository : BaseRepository<Category, CategoryRepository>, 
         }
         return returnValue;
     }
+
+    public ReturnValue IsValidId(int id)
+    {
+        var returnValue = new ReturnValue();
+        try
+        {
+            var result = Connection.QueryFirstOrDefault<int>(CategorySQL.IsValidIdSQL, new { Id = id }, Transaction);
+            if (result <= 0)
+            {
+                returnValue.AddError("database", $"Id: {id} is not a valid Category Id.");
+                return returnValue;
+            }
+            returnValue.Success = true;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+    public async Task<ReturnValue> IsValidIdAsync(int id)
+    {
+        var returnValue = new ReturnValue();
+
+        try
+        {
+            var result = await Connection.QueryFirstOrDefaultAsync<int>(CategorySQL.IsValidIdSQL, new { Id = id }, Transaction);
+            if (result <= 0)
+            {
+                returnValue.AddError("database", $"Id: {id} s not a valid Category Id.");
+                return returnValue;
+            }
+            returnValue.Success = true;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
 }

@@ -208,7 +208,7 @@ public class EntryServices : IEntryServices
             var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
             return entryRepository.GetAllEntriesForItemId(itemId);
         }
-    }   
+    }
     public async Task<ReturnValue<List<Entry>>> GetAllEntriesByItemIdAsync(int itemId)
     {
         await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync())
@@ -216,6 +216,92 @@ public class EntryServices : IEntryServices
             var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
             var result = await entryRepository.GetAllEntriesForItemIdAsync(itemId);
             return result;
+        }
+    }
+
+    public ReturnValue UpdateEntry(Entry entry)
+    {
+        var returnValue = _entryValidation.ValidateModel(entry);
+        if (!returnValue.Success)
+        {
+            return returnValue;
+        }
+        
+        using (var unitOfWork = UnitOfWork.Create(true))
+        {
+            var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            try
+            {
+                var categoryResult = categoryRepository.IsValidId(entry.CategoryId);
+                var itemResult = itemRepository.IsValidId(entry.ItemId);
+                if (!categoryResult.Success || !itemResult.Success)
+                {
+                    returnValue.Consume(categoryResult);
+                    returnValue.Consume(itemResult);
+                    returnValue.AddError("updateentry", "Invalid category or item id");
+                    return returnValue;
+                }
+                returnValue = entryRepository.UpdateRow(entry);
+                if (!returnValue.Success)
+                {
+                    unitOfWork.Rollback();
+                    return returnValue;
+                }
+                unitOfWork.Commit();
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                returnValue.AddError("updateentry", ex.Message);
+                return returnValue;
+            }
+        }
+    }
+    public async Task<ReturnValue> UpdateEntryAsync(Entry entry)
+    {
+        var returnValue = await _entryValidation.ValidateModelAsync(entry);
+        if (!returnValue.Success)
+        {
+            return returnValue;
+        }
+
+        await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+        {
+            var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var itemRepository = _repositoryFactory.CreateItemRepository(unitOfWork.Connection, unitOfWork.Transaction);
+            var entryRepository = _repositoryFactory.CreateEntryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+
+            try
+            {
+                var categoryResult = await categoryRepository.IsValidIdAsync(entry.CategoryId);
+                var itemResult = await itemRepository.IsValidIdAsync(entry.ItemId);
+                if (!categoryResult.Success || !itemResult.Success)
+                {
+                    returnValue.Consume(categoryResult);
+                    returnValue.Consume(itemResult);
+                    returnValue.AddError("updateentry", "Invalid category or item id");
+                    return returnValue;
+                }
+                returnValue = await entryRepository.UpdateRowAsync(entry);
+                if (!returnValue.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue;
+                }
+                await unitOfWork.CommitAsync();
+                returnValue.Success = true;
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+                await unitOfWork.RollbackAsync();
+                returnValue.AddError("updateentry", ex.Message);
+                return returnValue;
+            }
         }
     }
 }

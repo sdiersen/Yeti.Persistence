@@ -52,7 +52,7 @@ internal class AccountSQL
                             ;"
         ;
     internal const string UpdateRowSQL = $@"
-                                UPDATE {DbTableNames.ACCOUNT_TABLE} 
+                                UPDATE {DbTableNames.ACCOUNT_TABLE} WITH (ROWLOCK)
                                 SET 
                                     {DbAccountTable.USERNAME} = @Username, 
                                     {DbAccountTable.PASSWORD} = @Password, 

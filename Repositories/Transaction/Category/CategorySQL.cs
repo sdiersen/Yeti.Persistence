@@ -38,7 +38,7 @@ internal class CategorySQL
         ";
 
     internal const string UpdateRowSQL = @$"
-            UPDATE {DbTableNames.CATEGORY_TABLE}
+            UPDATE {DbTableNames.CATEGORY_TABLE} WITH (ROWLOCK)
             SET
                 {DbCategoryTable.NAME} = @Name,
                 {DbCategoryTable.DESCRIPTION} = @Description,
@@ -50,7 +50,16 @@ internal class CategorySQL
     internal const string GetUnattachedIdSQL = @$"
             SELECT {DbCommonColumns.ID}
             FROM {DbTableNames.CATEGORY_TABLE}
-            WHERE {DbCategoryTable.NAME} = 'unattached'
-            );
+            WHERE {DbCategoryTable.NAME} = 'unattached';
+        ";
+    internal const string IsValidIdSQL = $@"
+            SELECT CASE WHEN EXISTS (
+                SELECT 1
+                FROM {DbTableNames.CATEGORY_TABLE}
+                WHERE {DbCommonColumns.ID} = @Id
+                )
+            THEN 1
+            ELSE 0
+            END;
         ";
 }

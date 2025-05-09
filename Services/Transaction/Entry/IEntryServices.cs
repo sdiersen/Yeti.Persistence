@@ -15,4 +15,7 @@ public interface IEntryServices
 
     ReturnValue<List<Entry>> GetAllEntriesByItemId(int itemId);
     Task<ReturnValue<List<Entry>>> GetAllEntriesByItemIdAsync(int itemId);
+
+    ReturnValue UpdateEntry(Entry entry);
+    Task<ReturnValue> UpdateEntryAsync(Entry entry);
 }

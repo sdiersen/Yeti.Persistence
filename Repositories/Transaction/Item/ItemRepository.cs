@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System.Data;
+
+using Dapper;
 
 using ErrorHandling;
 
@@ -210,7 +212,6 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
         }
         return returnValue;
     }
-
     public async Task<ReturnValue<List<Item>>> GetItemsAsync(List<int> itemIds)
     {
         var returnValue = new ReturnValue<List<Item>>();
@@ -230,6 +231,45 @@ public class ItemRepository : BaseRepository<Item, ItemRepository>, IRepository<
                 returnValue.AddMessage("getitembyids", "No items found for the specified IDs.");
             }
             returnValue.Data = items;
+            returnValue.Success = true;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }
+
+    public ReturnValue IsValidId(int id)
+    {
+        var returnValue = new ReturnValue();
+        try
+        {
+            var result = Connection.QueryFirstOrDefault<int>(ItemSQL.IsValidIdSQL, new { Id = id }, Transaction);
+            if (result <= 0)
+            {
+                returnValue.AddError("database", $"Id: {id} is not a valid Item Id.");
+                return returnValue;
+            }
+            returnValue.Success = true;
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("database", ex.Message);
+        }
+        return returnValue;
+    }   
+    public async Task<ReturnValue> IsValidIdAsync(int id)
+    {
+        var returnValue = new ReturnValue();
+        try
+        {
+            var result = await Connection.QueryFirstOrDefaultAsync<int>(ItemSQL.IsValidIdSQL, new { Id = id }, Transaction);
+            if (result <= 0)
+            {
+                returnValue.AddError("database", $"Id: {id} is not a valid Item Id.");
+                return returnValue;
+            }
             returnValue.Success = true;
         }
         catch (Exception ex)

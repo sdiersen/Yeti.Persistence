@@ -42,7 +42,7 @@ internal class AccountRoleSQL
                                 ;"
                         ;
     internal const string UpdateRowSQL = $@"
-                                    UPDATE {DbTableNames.ACCOUNT_ROLE_TABLE} 
+                                    UPDATE {DbTableNames.ACCOUNT_ROLE_TABLE} WITH (ROWLOCK)
                                     SET 
                                         {DbAccountRoleTable.ACCOUNT_ID} = @AccountId, 
                                         {DbAccountRoleTable.ROLE_ID} = @RoleId, 
