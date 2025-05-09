@@ -1,5 +1,4 @@
 ﻿using ErrorHandling;
-
 using Microsoft.Extensions.Logging;
 
 using Persistence.DTOs.Transaction;
@@ -101,6 +100,49 @@ public class CategoryServices : ICategoryServices
             return returnValue;
         }
     }
+    public async Task<ReturnValue<Category>> CreateAndReturnCategoryAsync(CategoryDTO categoryDTO)
+    {
+        var cat = new Category
+        {
+            Name = categoryDTO.Name,
+            Description = categoryDTO.Description
+        };
+        var returnValue = new ReturnValue<Category>();
+        var validationResult = await _categoryValidation.ValidateModelAsync(cat);
+        if (!validationResult.Success)
+        {
+            return returnValue.Consume(validationResult);
+        }
+        try
+        {
+            await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+            {
+                var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                var repoResult = await categoryRepository.InsertRowAndGetIdAsync(cat);
+                if (!repoResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue.Consume(repoResult);
+                }
+                var getResult = await categoryRepository.GetRowAsync(repoResult.Data);
+                if (!getResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue.Consume(getResult);
+                }
+                returnValue.Consume(repoResult);
+                returnValue.Data = getResult.Data;
+                returnValue.Success = true;
+                await unitOfWork.CommitAsync();
+                return returnValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("createcategory", ex.Message);
+            return returnValue;
+        }
+    }
 
     public ReturnValue<List<Category>> GetAllCategories()
     {
@@ -173,6 +215,44 @@ public class CategoryServices : ICategoryServices
                 returnValue.AddError("updatecategory", ex.Message);
                 return returnValue;
             }
+        }
+    }
+    public async Task<ReturnValue<Category>> UpdateAndReturnCategoryAsync(Category cat)
+    {
+        var returnValue = new ReturnValue<Category>();
+        var validationResult = await _categoryValidation.ValidateModelAsync(cat);
+        if (!validationResult.Success)
+        {
+            return returnValue.Consume(validationResult);
+        }
+        try
+        {
+            await using (var unitOfWork = await UnitOfWorkAsync.CreateAsync(true))
+            {
+                var categoryRepository = _repositoryFactory.CreateCategoryRepository(unitOfWork.Connection, unitOfWork.Transaction);
+                var repoResult = await categoryRepository.UpdateRowAsync(cat); //TODO should probably be UpdateRowAndGetIdAsync
+                if (!repoResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue.Consume(repoResult);
+                }
+                var getResult = await categoryRepository.GetRowAsync(cat.Id); //TODO should probably be repoResult.Data
+                if (!getResult.Success)
+                {
+                    await unitOfWork.RollbackAsync();
+                    return returnValue.Consume(getResult);
+                }
+                returnValue.Consume(repoResult);
+                returnValue.Data = getResult.Data;
+                returnValue.Success = true;
+                await unitOfWork.CommitAsync();
+                return returnValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            returnValue.AddError("updatecategory", ex.Message);
+            return returnValue;
         }
     }
 

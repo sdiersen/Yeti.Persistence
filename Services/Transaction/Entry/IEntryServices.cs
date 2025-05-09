@@ -9,6 +9,7 @@ public interface IEntryServices
 {
     ReturnValue CreateEntry(EntryDTO entryDTO);
     Task<ReturnValue> CreateEntryAsync(EntryDTO entryDTO);
+    Task<ReturnValue<Entry>> CreateAndReturnEntryAsync(EntryDTO entryDTO);
 
     ReturnValue<List<Entry>> GetAllEntries();
     Task<ReturnValue<List<Entry>>> GetAllEntriesAsync();
@@ -18,4 +19,5 @@ public interface IEntryServices
 
     ReturnValue UpdateEntry(Entry entry);
     Task<ReturnValue> UpdateEntryAsync(Entry entry);
+    Task<ReturnValue<Entry>> UpdateAndReturnEntryAsync(Entry entry);
 }
