@@ -26,10 +26,6 @@ namespace Persistence.Migrations.Constants
         /// </summary>
         public const string BUDGET_AMOUNT = "BudgetAmount";
         /// <summary>
-        /// This is the sum of the entries for this item.
-        /// </summary>
-        public const string CURRENT_AMOUNT = "CurrentAmount";
-        /// <summary>
         /// This is a foreign key to the Category table.
         /// </summary>
         public const string CATEGORY_ID = "CategoryId";

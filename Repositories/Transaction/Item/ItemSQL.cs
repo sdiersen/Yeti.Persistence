@@ -11,7 +11,6 @@ internal class ItemSQL
                                 {DbItemTable.NAME},
                                 {DbItemTable.NOTE},
                                 {DbItemTable.BUDGET_AMOUNT},
-                                {DbItemTable.CURRENT_AMOUNT},
                                 {DbItemTable.CATEGORY_ID},
                                 {DbItemTable.IS_EXPENSE}
 
@@ -23,7 +22,6 @@ internal class ItemSQL
                                 @Name,
                                 @Note,
                                 @BudgetAmount,
-                                @CurrentAmount,
                                 @CategoryId,
                                 @IsExpense
                             );
@@ -36,7 +34,6 @@ internal class ItemSQL
                                 {DbItemTable.NAME},
                                 {DbItemTable.NOTE},
                                 {DbItemTable.BUDGET_AMOUNT},
-                                {DbItemTable.CURRENT_AMOUNT},
                                 {DbItemTable.CATEGORY_ID},
                                 {DbItemTable.IS_EXPENSE}
                             )
@@ -48,7 +45,6 @@ internal class ItemSQL
                                 @Name,
                                 @Note,
                                 @BudgetAmount,
-                                @CurrentAmount,
                                 @CategoryId,
                                 @IsExpense
                             );
@@ -60,7 +56,6 @@ internal class ItemSQL
                                 {DbItemTable.NAME} = @Name,
                                 {DbItemTable.NOTE} = @Note,
                                 {DbItemTable.BUDGET_AMOUNT} = @BudgetAmount,
-                                {DbItemTable.CURRENT_AMOUNT} = @CurrentAmount,
                                 {DbItemTable.CATEGORY_ID} = @CategoryId,
                                 {DbItemTable.IS_EXPENSE} = @IsExpense
                             WHERE

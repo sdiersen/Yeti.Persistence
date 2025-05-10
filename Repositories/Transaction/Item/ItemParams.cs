@@ -13,7 +13,6 @@ internal class ItemParams
         parameters.Add("Name", row.Name);
         parameters.Add("Note", row.Note);
         parameters.Add("BudgetAmount", row.BudgetAmount);
-        parameters.Add("CurrentAmount", row.CurrentAmount);
         parameters.Add("CategoryId", row.CategoryId);
         parameters.Add("IsExpense", row.IsExpense);
         return parameters;

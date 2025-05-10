@@ -24,10 +24,6 @@ namespace Persistence.Models.Transaction
         /// </summary>
         public decimal BudgetAmount { get; set; } = 0.0m;
         /// <summary>
-        /// The sum of the entries for this item.
-        /// </summary>
-        public decimal CurrentAmount { get; set; } = 0.0m;
-        /// <summary>
         /// The foreign key to the Category table.
         /// Default is -1.
         /// </summary>

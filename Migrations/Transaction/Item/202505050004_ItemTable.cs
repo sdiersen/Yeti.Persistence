@@ -15,7 +15,6 @@ public class AddUnAttachedItemTableRow : Migration
         //        Name = "Unattached",
         //        Note = "This is an item for entries that are not attached to any item. Typically used as a temporary holding area until a proper item is created.",
         //        BudgetAmount = 0.0m,
-        //        CurrentAmount = 0.0m,
         //        CategoryId = -1, // TODO: Change this to the Id of the Unattached Category when it is created
         //        IsExpense = true,
         //        CreatedOn = DateTime.Now,
@@ -27,7 +26,6 @@ public class AddUnAttachedItemTableRow : Migration
                 {DbItemTable.NAME},
                 {DbItemTable.NOTE},
                 {DbItemTable.BUDGET_AMOUNT},
-                {DbItemTable.CURRENT_AMOUNT},
                 {DbItemTable.CATEGORY_ID},
                 {DbItemTable.IS_EXPENSE},
                 {DbCommonColumns.CREATED_ON},
@@ -37,7 +35,6 @@ public class AddUnAttachedItemTableRow : Migration
             (
                 'Unattached',
                 'This is an item for entries that are not attached to any item. Typically used as a temporary holding area until a proper item is created.',
-                0.0,
                 0.0,
                 (SELECT {DbCommonColumns.ID} FROM {DbTableNames.CATEGORY_TABLE} WHERE {DbCategoryTable.NAME} = 'Unattached'),
                 1, -- True for Expense

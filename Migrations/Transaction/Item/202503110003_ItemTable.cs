@@ -15,7 +15,6 @@ public class ItemTable : Migration
             .WithColumn($"{DbItemTable.NOTE}").AsString().Nullable()
             .WithColumn($"{DbItemTable.IS_EXPENSE}").AsBoolean().NotNullable()
             .WithColumn($"{DbItemTable.BUDGET_AMOUNT}").AsDecimal().NotNullable()
-            .WithColumn($"{DbItemTable.CURRENT_AMOUNT}").AsDecimal().NotNullable()
             .WithColumn($"{DbItemTable.CATEGORY_ID}").AsInt32().NotNullable().ForeignKey(DbTableNames.CATEGORY_TABLE, DbCommonColumns.ID)
             .WithColumn($"{DbCommonColumns.CREATED_ON}").AsDateTime().NotNullable()
             .WithColumn($"{DbCommonColumns.MODIFIED_ON}").AsDateTime().NotNullable();

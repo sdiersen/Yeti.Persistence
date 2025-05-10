@@ -38,7 +38,6 @@ public class ItemServices : IItemServices
             Note = itemDTO.Note,
             IsExpense = itemDTO.IsExpense,
             BudgetAmount = itemDTO.BudgetAmount > 0 ? itemDTO.BudgetAmount : 0.0m,
-            CurrentAmount = itemDTO.CurrentAmount > 0 ? itemDTO.CurrentAmount : 0.0m,
             CategoryId = itemDTO.CategoryId > 0 ? itemDTO.CategoryId : -1, // Ensure CategoryId is valid
         };
         var returnValue = _itemValidation.ValidateModel(item);
@@ -74,7 +73,6 @@ public class ItemServices : IItemServices
             Note = itemDTO.Note,
             IsExpense = itemDTO.IsExpense,
             BudgetAmount = itemDTO.BudgetAmount > 0 ? itemDTO.BudgetAmount : 0.0m,
-            CurrentAmount = itemDTO.CurrentAmount > 0 ? itemDTO.CurrentAmount : 0.0m,
             CategoryId = itemDTO.CategoryId > 0 ? itemDTO.CategoryId : -1, // Ensure CategoryId is valid
         };
         var returnValue = await _itemValidation.ValidateModelAsync(item);
@@ -111,7 +109,6 @@ public class ItemServices : IItemServices
             Note = itemDTO.Note,
             IsExpense = itemDTO.IsExpense,
             BudgetAmount = itemDTO.BudgetAmount > 0 ? itemDTO.BudgetAmount : 0.0m,
-            CurrentAmount = itemDTO.CurrentAmount > 0 ? itemDTO.CurrentAmount : 0.0m,
             CategoryId = itemDTO.CategoryId > 0 ? itemDTO.CategoryId : -1, // Ensure CategoryId is valid
         };
         var itemValidation = await _itemValidation.ValidateModelAsync(item);
